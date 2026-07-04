@@ -9,7 +9,7 @@ app.use(cors({
   origin: "http://localhost:5173"
 }));
 
-// routes go here
+// api routes
 app.use("/api", routes);
 
 export default app;

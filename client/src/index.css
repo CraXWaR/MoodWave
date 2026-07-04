@@ -1,111 +1,114 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* ---- Base surfaces (dark-first: this is a mood/music app, used at night as much as day) ---- */
+  --bg: #0E0F13;
+  --bg-elevated: #15161C;
+  --surface: #1B1D24;
+  --surface-hover: #23252E;
+  --border: #2A2C34;
+  --border-strong: #3A3D48;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* ---- Text ---- */
+  --text-primary: #F2F1ED;
+  --text-secondary: #A5A4AD;
+  --text-muted: #6E6D77;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* ---- UI accent (actions — buttons, links, focus rings. Never used for mood data) ---- */
+  --accent: #4FD1C5;
+  --accent-hover: #3FBDB0;
+  --on-accent: #06201D;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* ---- Mood spectrum ----
+     Each mood: base (fills, chart bars) / soft (tinted backgrounds, badges) / text (on soft bg) */
+
+  /* Joyful / happy */
+  --mood-joy: #F5A623;
+  --mood-joy-soft: #3A2C10;
+  --mood-joy-text: #FBC96B;
+
+  /* Calm / content */
+  --mood-calm: #2DD4A7;
+  --mood-calm-soft: #0F2E27;
+  --mood-calm-text: #6EE8C9;
+
+  /* Sad / melancholic */
+  --mood-sad: #5B6EE8;
+  --mood-sad-soft: #1B2040;
+  --mood-sad-text: #8E9BF2;
+
+  /* Anxious */
+  --mood-anxious: #9B59D0;
+  --mood-anxious-soft: #2A1C3A;
+  --mood-anxious-text: #C08CE8;
+
+  /* Stressed / angry */
+  --mood-stressed: #E8547A;
+  --mood-stressed-soft: #3A1B26;
+  --mood-stressed-text: #F08CA8;
+
+  /* Burnt out — deliberately desaturated; burnout reads as flat, not vivid */
+  --mood-burnout: #8B7E74;
+  --mood-burnout-soft: #26221D;
+  --mood-burnout-text: #B5A99B;
+
+  /* ---- Semantic (unrelated to mood data — errors, success states, etc.) ---- */
+  --success: #4ADE80;
+  --danger: #F87171;
+  --warning: #FBBF24;
+
+  /* ---- Type ---- */
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* ---- Shape / motion ---- */
+  --radius: 10px;
+  --radius-lg: 16px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ---- Light mode override (opt-in via .light class or data-theme="light") ---- */
+.light,
+[data-theme='light'] {
+  --bg: #FAF9F6;
+  --bg-elevated: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-hover: #F1F0EC;
+  --border: #E4E2DC;
+  --border-strong: #CFCCC3;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --text-primary: #17181D;
+  --text-secondary: #5C5A54;
+  --text-muted: #94918A;
+
+  --on-accent: #06201D;
+
+  --mood-joy-soft: #FCEACB;
+  --mood-calm-soft: #D6F3EA;
+  --mood-sad-soft: #DEE2F9;
+  --mood-anxious-soft: #EBDCF7;
+  --mood-stressed-soft: #FBDDE5;
+  --mood-burnout-soft: #EAE6DF;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
+/* ---- Base element styles ---- */
 body {
-  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
+h1, h2, h3 {
+  font-family: var(--font-display);
   font-weight: 500;
-  color: var(--text-h);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
