@@ -6,7 +6,14 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: (origin, callback) => {
+    if (!origin || origin === "http://localhost:5173" || /\.devtunnels\.ms$/.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 }));
 
 // api routes

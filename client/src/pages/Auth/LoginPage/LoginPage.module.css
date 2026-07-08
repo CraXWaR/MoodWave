@@ -1,0 +1,58 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.footer {
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.footer a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.serverError {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--mood-stressed-soft);
+  color: var(--mood-stressed-text);
+  font-size: 13.5px;
+}
+
+.form > * {
+  animation: fieldIn 0.45s var(--ease-out) both;
+}
+
+.form > *:nth-child(1) { animation-delay: 0.04s; }
+.form > *:nth-child(2) { animation-delay: 0.09s; }
+.form > *:nth-child(3) { animation-delay: 0.14s; }
+.form > *:nth-child(4) { animation-delay: 0.19s; }
+.form > *:nth-child(5) { animation-delay: 0.24s; }
+
+@keyframes fieldIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form > * {
+    animation: none;
+  }
+}

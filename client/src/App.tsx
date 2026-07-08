@@ -1,24 +1,59 @@
-import { useEffect, useState } from "react";
-import { getHealth } from "./services/api";
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 
-function App() {
-  const [data, setData] = useState<any>(null);
+import LoginPage from './pages/Auth/LoginPage/LoginPage';
+import RegisterPage from './pages/Auth/RegisterPage/RegisterPage';
 
-  useEffect(() => {
-    getHealth().then(setData);
-  }, []);
+import './App.css';
+
+function Nav() {
+  const location = useLocation();
+  const links = [
+    { to: '/', label: 'Home' },
+    { to: '/login', label: 'Login' },
+    { to: '/register', label: 'Register' },
+  ];
+
+  return (
+    <nav className="nav">
+      <span className="wordmark">MoodWave</span>
+      <div className="links">
+        {links.map((link) => (
+          <Link
+            key={link.to}
+            to={link.to}
+            className={['link', location.pathname === link.to ? 'active' : ''].join(' ')}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function HomePage() {
+
 
   return (
     <div style={{ padding: 20 }}>
       <h1>MoodWave 🎧</h1>
 
-      {data ? (
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <p>Loading...</p>
     </div>
   );
 }
 
-export default App; 
+function App() {
+  return (
+    <>
+      <Nav />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;

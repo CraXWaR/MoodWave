@@ -92,6 +92,7 @@
 
 /* ---- Base element styles ---- */
 body {
+  margin: 0;
   background: var(--bg);
   color: var(--text-primary);
   font-family: var(--font-body);
