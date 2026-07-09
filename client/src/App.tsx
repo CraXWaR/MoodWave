@@ -1,39 +1,14 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/auth.context";
 
-import LoginPage from './pages/Auth/LoginPage/LoginPage';
-import RegisterPage from './pages/Auth/RegisterPage/RegisterPage';
+import LoginPage from "./pages/Auth/LoginPage/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 
-import './App.css';
+import { RootLayout } from "./components/layout/RootLayout/RootLayout";
 
-function Nav() {
-  const location = useLocation();
-  const links = [
-    { to: '/', label: 'Home' },
-    { to: '/login', label: 'Login' },
-    { to: '/register', label: 'Register' },
-  ];
-
-  return (
-    <nav className="nav">
-      <span className="wordmark">MoodWave</span>
-      <div className="links">
-        {links.map((link) => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className={['link', location.pathname === link.to ? 'active' : ''].join(' ')}
-          >
-            {link.label}
-          </Link>
-        ))}
-      </div>
-    </nav>
-  );
-}
+import "./App.css";
 
 function HomePage() {
-
-
   return (
     <div style={{ padding: 20 }}>
       <h1>MoodWave 🎧</h1>
@@ -45,14 +20,17 @@ function HomePage() {
 
 function App() {
   return (
-    <>
-      <Nav />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
-    </>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<RootLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

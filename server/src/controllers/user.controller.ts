@@ -14,9 +14,8 @@ export class UserController {
 
     try {
       const { email, password } = parsed.data;
-      const { user, token } = await this.userService.signup(email, password);
-      res.cookie("token", token, { httpOnly: true, sameSite: "lax" });
-      res.status(201).json({ id: user.id, email: user.email });
+      await this.userService.signup(email, password);
+      res.status(201).json({ message: "Registration successful. Please log in." });
     } catch (err) {
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });
@@ -35,8 +34,7 @@ export class UserController {
     try {
       const { email, password } = parsed.data;
       const { user, token } = await this.userService.login(email, password);
-      res.cookie("token", token, { httpOnly: true, sameSite: "lax" });
-      res.json({ id: user.id, email: user.email });
+      res.json({ id: user.id, email: user.email, token });
     } catch (err) {
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });

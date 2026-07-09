@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { authService } from "../../../services/auth.service";
 import { validateLogin, type LoginValues } from "../../../helpers/auth.validation";
 import { useAuthForm } from "../../../hooks/useAuthForm";
+import { useAuth } from "../../../context/auth.context";
 
 import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout";
 import Input from "../../../components/ui/Input/Input";
@@ -11,10 +12,15 @@ import Button from "../../../components/ui/Button/Button";
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
+  const { setAuthUser } = useAuth();
+
   const { values, errors, serverError, isSubmitting, handleChange, handleSubmit } =
     useAuthForm<LoginValues>({ email: '', password: '' }, validateLogin, async (values) => {
-      await authService.login(values);
-      // TODO: redirect to the check-in / dashboard route once it exists
+      const res = await authService.login(values);
+      setAuthUser({
+       token: res.token,
+        user: { id: res.id, email: res.email }
+      })
     });
 
   return (

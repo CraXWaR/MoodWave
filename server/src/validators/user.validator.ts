@@ -7,7 +7,7 @@ export const signupSchema = z
         email: z.string().email("Invalid email address"),
         password: z
             .string()
-            .min(3, "Password must be at least 8 characters"),
+            .min(3, "Password must be at least 3 characters"),
         // .regex(
         //     passwordRegex,
         //     "Password must include 1 uppercase, 1 lowercase, 1 number, and 1 special character"
