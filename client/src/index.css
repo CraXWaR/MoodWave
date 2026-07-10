@@ -54,6 +54,8 @@
   --success: #4ADE80;
   --danger: #F87171;
   --warning: #FBBF24;
+  --success-soft: rgba(74, 222, 128, 0.12);
+  --danger-soft: rgba(245, 107, 107, 0.12);
 
   /* ---- Type ---- */
   --font-display: 'Fraunces', serif;

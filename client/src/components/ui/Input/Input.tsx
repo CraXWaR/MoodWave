@@ -1,24 +1,19 @@
-import {
-  forwardRef,
-  useId,
-  type InputHTMLAttributes,
-  type ReactNode,
-} from "react";
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from "react";
 import styles from "./Input.module.css";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  error?: string;
+  invalid?: boolean;
   hint?: string;
   rightElement?: ReactNode;
+  describedBy?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, hint, rightElement, id, className, ...rest }, ref) => {
+  ({ label, invalid, hint, rightElement, describedBy, id, className, ...rest }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const hintId = hint ? `${inputId}-hint` : undefined;
-    const errorId = error ? `${inputId}-error` : undefined;
 
     return (
       <div className={[styles.field, className ?? ""].join(" ")}>
@@ -28,16 +23,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <div
           className={[
             styles.inputWrap,
-            error ? styles.inputWrapError : "",
+            invalid ? styles.inputWrapError : "",
           ].join(" ")}
         >
           <input
             ref={ref}
             id={inputId}
             className={styles.input}
-            aria-invalid={Boolean(error) || undefined}
+            aria-invalid={invalid || undefined}
             aria-describedby={
-              [hintId, errorId].filter(Boolean).join(" ") || undefined
+              [hintId, describedBy].filter(Boolean).join(" ") || undefined
             }
             {...rest}
           />
@@ -45,21 +40,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             <div className={styles.rightElement}>{rightElement}</div>
           )}
         </div>
-        {hint && !error && (
+        {hint && (
           <p id={hintId} className={styles.hint}>
             {hint}
-          </p>
-        )}
-        {error && (
-          <p id={errorId} className={styles.error} role="alert">
-            {error}
           </p>
         )}
       </div>
     );
   },
 );
-
-Input.displayName = "Input";
 
 export default Input;

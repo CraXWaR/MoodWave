@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { authService } from '../../../services/auth.service';
 import { validateRegister, type RegisterValues } from '../../../helpers/auth.validation';
@@ -11,13 +11,15 @@ import Button from '../../../components/ui/Button/Button';
 import styles from './RegisterPage.module.css';
 
 export default function RegisterPage() {
-  const { values, errors, serverError, isSubmitting, handleChange, handleSubmit } =
+  const navigate = useNavigate();
+
+  const { values, errors, allErrors, isSubmitting, handleChange, handleSubmit } =
     useAuthForm<RegisterValues>(
       { email: '', password: '', confirmPassword: '' },
       validateRegister,
       async (values) => {
-        await authService.register(values);
-        // TODO: redirect to the check-in / dashboard route once it exists
+        const response = await authService.register(values);
+        navigate("/login", { state: { successMessage: response.message } });
       },
     );
 
@@ -31,7 +33,8 @@ export default function RegisterPage() {
           placeholder="you@example.com"
           value={values.email}
           onChange={handleChange('email')}
-          error={errors.email}
+          invalid={!!errors.email}
+          describedBy={allErrors.length > 0 ? "form-errors" : undefined}
         />
 
         <Input
@@ -41,7 +44,8 @@ export default function RegisterPage() {
           placeholder="••••••••"
           value={values.password}
           onChange={handleChange('password')}
-          error={errors.password}
+          invalid={!!errors.password}
+          describedBy={allErrors.length > 0 ? "form-errors" : undefined}
         />
 
         <Input
@@ -51,8 +55,17 @@ export default function RegisterPage() {
           placeholder="••••••••"
           value={values.confirmPassword}
           onChange={handleChange('confirmPassword')}
-          error={errors.confirmPassword}
+          invalid={!!errors.confirmPassword}
+          describedBy={allErrors.length > 0 ? "form-errors" : undefined}
         />
+
+       {allErrors.length > 0 && (
+          <div className={styles.errors}>
+            {allErrors.map((message, index) => (
+              <p key={index}>{message}</p>
+            ))}
+          </div>
+        )}
 
         <Button type="submit" fullWidth isLoading={isSubmitting}>
           Create account

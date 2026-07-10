@@ -22,12 +22,16 @@
   text-decoration: underline;
 }
 
-.serverError {
+.errors {
   padding: 10px 12px;
   border-radius: var(--radius);
-  background: var(--mood-stressed-soft);
-  color: var(--mood-stressed-text);
+  background: var(--danger-soft);
+  color: var(--danger);
   font-size: 13.5px;
+}
+
+.errors p {
+  margin: 5px 0;
 }
 
 .form > * {

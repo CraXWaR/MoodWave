@@ -12,6 +12,10 @@ export function useAuthForm<T extends Record<string, string>>(
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const allErrors = [...Object.values(errors), serverError].filter(
+    (msg): msg is string => Boolean(msg),
+  );
+
   const handleChange =
     (field: keyof T) => (e: ChangeEvent<HTMLInputElement>) => {
       setValues((prev) => ({ ...prev, [field]: e.target.value }));
@@ -41,6 +45,7 @@ export function useAuthForm<T extends Record<string, string>>(
     values,
     errors,
     serverError,
+    allErrors,
     isSubmitting,
     handleChange,
     handleSubmit,

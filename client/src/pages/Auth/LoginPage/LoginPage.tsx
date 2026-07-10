@@ -1,7 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { authService } from "../../../services/auth.service";
-import { validateLogin, type LoginValues } from "../../../helpers/auth.validation";
+import {
+  validateLogin,
+  type LoginValues,
+} from "../../../helpers/auth.validation";
 import { useAuthForm } from "../../../hooks/useAuthForm";
 import { useAuth } from "../../../context/auth.context";
 
@@ -13,19 +16,35 @@ import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
   const { setAuthUser } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const { values, errors, serverError, isSubmitting, handleChange, handleSubmit } =
-    useAuthForm<LoginValues>({ email: '', password: '' }, validateLogin, async (values) => {
+  const successMessage = (location.state as { successMessage?: string } | null)
+    ?.successMessage;
+
+  const { values, errors, allErrors, isSubmitting, handleChange, handleSubmit,} = useAuthForm<LoginValues>(
+    { email: "", password: "" },
+    validateLogin,
+    async (values) => {
       const res = await authService.login(values);
       setAuthUser({
-       token: res.token,
-        user: { id: res.id, email: res.email }
-      })
-    });
+        token: res.token,
+        user: { id: res.id, email: res.email },
+      });
+      navigate("/");
+    },
+  );
 
   return (
     <AuthLayout eyebrow="Welcome back" title="Sign in">
+
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        {successMessage && (
+          <div className={styles.success}>
+            <p className={styles.successMessage}>{successMessage}</p>
+          </div>
+        )}
+
         <Input
           label="Email"
           type="email"
@@ -33,7 +52,8 @@ export default function LoginPage() {
           placeholder="you@example.com"
           value={values.email}
           onChange={handleChange("email")}
-          error={errors.email}
+          invalid={!!errors.email}
+          describedBy={allErrors.length > 0 ? "form-errors" : undefined}
         />
 
         <Input
@@ -43,8 +63,17 @@ export default function LoginPage() {
           placeholder="••••••••"
           value={values.password}
           onChange={handleChange("password")}
-          error={errors.password}
+          invalid={!!errors.password}
+          describedBy={allErrors.length > 0 ? "form-errors" : undefined}
         />
+
+        {allErrors.length > 0 && (
+          <div className={styles.errors}>
+            {allErrors.map((message, index) => (
+              <p key={index}>{message}</p>
+            ))}
+          </div>
+        )}
 
         <Button type="submit" fullWidth isLoading={isSubmitting}>
           Sign in
