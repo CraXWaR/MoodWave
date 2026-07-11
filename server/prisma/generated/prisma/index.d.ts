@@ -14,6 +14,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model MoodEntry
+ * 
+ */
+export type MoodEntry = $Result.DefaultSelection<Prisma.$MoodEntryPayload>
+/**
  * Model User
  * 
  */
@@ -28,8 +33,8 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more MoodEntries
+ * const moodEntries = await prisma.moodEntry.findMany()
  * ```
  *
  *
@@ -51,8 +56,8 @@ export class PrismaClient<
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more MoodEntries
+   * const moodEntries = await prisma.moodEntry.findMany()
    * ```
    *
    *
@@ -141,6 +146,16 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.moodEntry`: Exposes CRUD operations for the **MoodEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MoodEntries
+    * const moodEntries = await prisma.moodEntry.findMany()
+    * ```
+    */
+  get moodEntry(): Prisma.MoodEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
     * Example usage:
     * ```ts
@@ -583,6 +598,7 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    MoodEntry: 'MoodEntry',
     User: 'User'
   };
 
@@ -599,10 +615,84 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user"
+      modelProps: "moodEntry" | "user"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      MoodEntry: {
+        payload: Prisma.$MoodEntryPayload<ExtArgs>
+        fields: Prisma.MoodEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MoodEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MoodEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.MoodEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MoodEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>
+          }
+          findMany: {
+            args: Prisma.MoodEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>[]
+          }
+          create: {
+            args: Prisma.MoodEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>
+          }
+          createMany: {
+            args: Prisma.MoodEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MoodEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.MoodEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>
+          }
+          update: {
+            args: Prisma.MoodEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.MoodEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MoodEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MoodEntryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>[]
+          }
+          upsert: {
+            args: Prisma.MoodEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MoodEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.MoodEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMoodEntry>
+          }
+          groupBy: {
+            args: Prisma.MoodEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MoodEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MoodEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<MoodEntryCountAggregateOutputType> | number
+          }
+        }
+      }
       User: {
         payload: Prisma.$UserPayload<ExtArgs>
         fields: Prisma.UserFieldRefs
@@ -785,6 +875,7 @@ export namespace Prisma {
     comments?: runtime.SqlCommenterPlugin[]
   }
   export type GlobalOmitConfig = {
+    moodEntry?: MoodEntryOmit
     user?: UserOmit
   }
 
@@ -861,10 +952,1163 @@ export namespace Prisma {
    */
 
 
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    moodEntries: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    moodEntries?: boolean | UserCountOutputTypeCountMoodEntriesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMoodEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MoodEntryWhereInput
+  }
+
 
   /**
    * Models
    */
+
+  /**
+   * Model MoodEntry
+   */
+
+  export type AggregateMoodEntry = {
+    _count: MoodEntryCountAggregateOutputType | null
+    _avg: MoodEntryAvgAggregateOutputType | null
+    _sum: MoodEntrySumAggregateOutputType | null
+    _min: MoodEntryMinAggregateOutputType | null
+    _max: MoodEntryMaxAggregateOutputType | null
+  }
+
+  export type MoodEntryAvgAggregateOutputType = {
+    mood: number | null
+  }
+
+  export type MoodEntrySumAggregateOutputType = {
+    mood: number | null
+  }
+
+  export type MoodEntryMinAggregateOutputType = {
+    id: string | null
+    mood: number | null
+    note: string | null
+    aiEmotion: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type MoodEntryMaxAggregateOutputType = {
+    id: string | null
+    mood: number | null
+    note: string | null
+    aiEmotion: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type MoodEntryCountAggregateOutputType = {
+    id: number
+    mood: number
+    note: number
+    aiEmotion: number
+    createdAt: number
+    updatedAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type MoodEntryAvgAggregateInputType = {
+    mood?: true
+  }
+
+  export type MoodEntrySumAggregateInputType = {
+    mood?: true
+  }
+
+  export type MoodEntryMinAggregateInputType = {
+    id?: true
+    mood?: true
+    note?: true
+    aiEmotion?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type MoodEntryMaxAggregateInputType = {
+    id?: true
+    mood?: true
+    note?: true
+    aiEmotion?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type MoodEntryCountAggregateInputType = {
+    id?: true
+    mood?: true
+    note?: true
+    aiEmotion?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type MoodEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MoodEntry to aggregate.
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MoodEntries to fetch.
+     */
+    orderBy?: MoodEntryOrderByWithRelationInput | MoodEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MoodEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MoodEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MoodEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MoodEntries
+    **/
+    _count?: true | MoodEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MoodEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MoodEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MoodEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MoodEntryMaxAggregateInputType
+  }
+
+  export type GetMoodEntryAggregateType<T extends MoodEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateMoodEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMoodEntry[P]>
+      : GetScalarType<T[P], AggregateMoodEntry[P]>
+  }
+
+
+
+
+  export type MoodEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MoodEntryWhereInput
+    orderBy?: MoodEntryOrderByWithAggregationInput | MoodEntryOrderByWithAggregationInput[]
+    by: MoodEntryScalarFieldEnum[] | MoodEntryScalarFieldEnum
+    having?: MoodEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MoodEntryCountAggregateInputType | true
+    _avg?: MoodEntryAvgAggregateInputType
+    _sum?: MoodEntrySumAggregateInputType
+    _min?: MoodEntryMinAggregateInputType
+    _max?: MoodEntryMaxAggregateInputType
+  }
+
+  export type MoodEntryGroupByOutputType = {
+    id: string
+    mood: number
+    note: string | null
+    aiEmotion: string | null
+    createdAt: Date
+    updatedAt: Date
+    userId: string
+    _count: MoodEntryCountAggregateOutputType | null
+    _avg: MoodEntryAvgAggregateOutputType | null
+    _sum: MoodEntrySumAggregateOutputType | null
+    _min: MoodEntryMinAggregateOutputType | null
+    _max: MoodEntryMaxAggregateOutputType | null
+  }
+
+  type GetMoodEntryGroupByPayload<T extends MoodEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MoodEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MoodEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MoodEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], MoodEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MoodEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    mood?: boolean
+    note?: boolean
+    aiEmotion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["moodEntry"]>
+
+  export type MoodEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    mood?: boolean
+    note?: boolean
+    aiEmotion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["moodEntry"]>
+
+  export type MoodEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    mood?: boolean
+    note?: boolean
+    aiEmotion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["moodEntry"]>
+
+  export type MoodEntrySelectScalar = {
+    id?: boolean
+    mood?: boolean
+    note?: boolean
+    aiEmotion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+  }
+
+  export type MoodEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "mood" | "note" | "aiEmotion" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["moodEntry"]>
+  export type MoodEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MoodEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MoodEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MoodEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MoodEntry"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      mood: number
+      note: string | null
+      aiEmotion: string | null
+      createdAt: Date
+      updatedAt: Date
+      userId: string
+    }, ExtArgs["result"]["moodEntry"]>
+    composites: {}
+  }
+
+  type MoodEntryGetPayload<S extends boolean | null | undefined | MoodEntryDefaultArgs> = $Result.GetResult<Prisma.$MoodEntryPayload, S>
+
+  type MoodEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MoodEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MoodEntryCountAggregateInputType | true
+    }
+
+  export interface MoodEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MoodEntry'], meta: { name: 'MoodEntry' } }
+    /**
+     * Find zero or one MoodEntry that matches the filter.
+     * @param {MoodEntryFindUniqueArgs} args - Arguments to find a MoodEntry
+     * @example
+     * // Get one MoodEntry
+     * const moodEntry = await prisma.moodEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MoodEntryFindUniqueArgs>(args: SelectSubset<T, MoodEntryFindUniqueArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MoodEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MoodEntryFindUniqueOrThrowArgs} args - Arguments to find a MoodEntry
+     * @example
+     * // Get one MoodEntry
+     * const moodEntry = await prisma.moodEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MoodEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, MoodEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MoodEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryFindFirstArgs} args - Arguments to find a MoodEntry
+     * @example
+     * // Get one MoodEntry
+     * const moodEntry = await prisma.moodEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MoodEntryFindFirstArgs>(args?: SelectSubset<T, MoodEntryFindFirstArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MoodEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryFindFirstOrThrowArgs} args - Arguments to find a MoodEntry
+     * @example
+     * // Get one MoodEntry
+     * const moodEntry = await prisma.moodEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MoodEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, MoodEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MoodEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MoodEntries
+     * const moodEntries = await prisma.moodEntry.findMany()
+     * 
+     * // Get first 10 MoodEntries
+     * const moodEntries = await prisma.moodEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const moodEntryWithIdOnly = await prisma.moodEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MoodEntryFindManyArgs>(args?: SelectSubset<T, MoodEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MoodEntry.
+     * @param {MoodEntryCreateArgs} args - Arguments to create a MoodEntry.
+     * @example
+     * // Create one MoodEntry
+     * const MoodEntry = await prisma.moodEntry.create({
+     *   data: {
+     *     // ... data to create a MoodEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends MoodEntryCreateArgs>(args: SelectSubset<T, MoodEntryCreateArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MoodEntries.
+     * @param {MoodEntryCreateManyArgs} args - Arguments to create many MoodEntries.
+     * @example
+     * // Create many MoodEntries
+     * const moodEntry = await prisma.moodEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MoodEntryCreateManyArgs>(args?: SelectSubset<T, MoodEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MoodEntries and returns the data saved in the database.
+     * @param {MoodEntryCreateManyAndReturnArgs} args - Arguments to create many MoodEntries.
+     * @example
+     * // Create many MoodEntries
+     * const moodEntry = await prisma.moodEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MoodEntries and only return the `id`
+     * const moodEntryWithIdOnly = await prisma.moodEntry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MoodEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, MoodEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MoodEntry.
+     * @param {MoodEntryDeleteArgs} args - Arguments to delete one MoodEntry.
+     * @example
+     * // Delete one MoodEntry
+     * const MoodEntry = await prisma.moodEntry.delete({
+     *   where: {
+     *     // ... filter to delete one MoodEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MoodEntryDeleteArgs>(args: SelectSubset<T, MoodEntryDeleteArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MoodEntry.
+     * @param {MoodEntryUpdateArgs} args - Arguments to update one MoodEntry.
+     * @example
+     * // Update one MoodEntry
+     * const moodEntry = await prisma.moodEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MoodEntryUpdateArgs>(args: SelectSubset<T, MoodEntryUpdateArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MoodEntries.
+     * @param {MoodEntryDeleteManyArgs} args - Arguments to filter MoodEntries to delete.
+     * @example
+     * // Delete a few MoodEntries
+     * const { count } = await prisma.moodEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MoodEntryDeleteManyArgs>(args?: SelectSubset<T, MoodEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MoodEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MoodEntries
+     * const moodEntry = await prisma.moodEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MoodEntryUpdateManyArgs>(args: SelectSubset<T, MoodEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MoodEntries and returns the data updated in the database.
+     * @param {MoodEntryUpdateManyAndReturnArgs} args - Arguments to update many MoodEntries.
+     * @example
+     * // Update many MoodEntries
+     * const moodEntry = await prisma.moodEntry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MoodEntries and only return the `id`
+     * const moodEntryWithIdOnly = await prisma.moodEntry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MoodEntryUpdateManyAndReturnArgs>(args: SelectSubset<T, MoodEntryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MoodEntry.
+     * @param {MoodEntryUpsertArgs} args - Arguments to update or create a MoodEntry.
+     * @example
+     * // Update or create a MoodEntry
+     * const moodEntry = await prisma.moodEntry.upsert({
+     *   create: {
+     *     // ... data to create a MoodEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MoodEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MoodEntryUpsertArgs>(args: SelectSubset<T, MoodEntryUpsertArgs<ExtArgs>>): Prisma__MoodEntryClient<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MoodEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryCountArgs} args - Arguments to filter MoodEntries to count.
+     * @example
+     * // Count the number of MoodEntries
+     * const count = await prisma.moodEntry.count({
+     *   where: {
+     *     // ... the filter for the MoodEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends MoodEntryCountArgs>(
+      args?: Subset<T, MoodEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MoodEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MoodEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MoodEntryAggregateArgs>(args: Subset<T, MoodEntryAggregateArgs>): Prisma.PrismaPromise<GetMoodEntryAggregateType<T>>
+
+    /**
+     * Group by MoodEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MoodEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MoodEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MoodEntryGroupByArgs['orderBy'] }
+        : { orderBy?: MoodEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MoodEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMoodEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MoodEntry model
+   */
+  readonly fields: MoodEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MoodEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MoodEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MoodEntry model
+   */
+  interface MoodEntryFieldRefs {
+    readonly id: FieldRef<"MoodEntry", 'String'>
+    readonly mood: FieldRef<"MoodEntry", 'Int'>
+    readonly note: FieldRef<"MoodEntry", 'String'>
+    readonly aiEmotion: FieldRef<"MoodEntry", 'String'>
+    readonly createdAt: FieldRef<"MoodEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"MoodEntry", 'DateTime'>
+    readonly userId: FieldRef<"MoodEntry", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MoodEntry findUnique
+   */
+  export type MoodEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which MoodEntry to fetch.
+     */
+    where: MoodEntryWhereUniqueInput
+  }
+
+  /**
+   * MoodEntry findUniqueOrThrow
+   */
+  export type MoodEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which MoodEntry to fetch.
+     */
+    where: MoodEntryWhereUniqueInput
+  }
+
+  /**
+   * MoodEntry findFirst
+   */
+  export type MoodEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which MoodEntry to fetch.
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MoodEntries to fetch.
+     */
+    orderBy?: MoodEntryOrderByWithRelationInput | MoodEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MoodEntries.
+     */
+    cursor?: MoodEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MoodEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MoodEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MoodEntries.
+     */
+    distinct?: MoodEntryScalarFieldEnum | MoodEntryScalarFieldEnum[]
+  }
+
+  /**
+   * MoodEntry findFirstOrThrow
+   */
+  export type MoodEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which MoodEntry to fetch.
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MoodEntries to fetch.
+     */
+    orderBy?: MoodEntryOrderByWithRelationInput | MoodEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MoodEntries.
+     */
+    cursor?: MoodEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MoodEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MoodEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MoodEntries.
+     */
+    distinct?: MoodEntryScalarFieldEnum | MoodEntryScalarFieldEnum[]
+  }
+
+  /**
+   * MoodEntry findMany
+   */
+  export type MoodEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which MoodEntries to fetch.
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MoodEntries to fetch.
+     */
+    orderBy?: MoodEntryOrderByWithRelationInput | MoodEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MoodEntries.
+     */
+    cursor?: MoodEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MoodEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MoodEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MoodEntries.
+     */
+    distinct?: MoodEntryScalarFieldEnum | MoodEntryScalarFieldEnum[]
+  }
+
+  /**
+   * MoodEntry create
+   */
+  export type MoodEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MoodEntry.
+     */
+    data: XOR<MoodEntryCreateInput, MoodEntryUncheckedCreateInput>
+  }
+
+  /**
+   * MoodEntry createMany
+   */
+  export type MoodEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MoodEntries.
+     */
+    data: MoodEntryCreateManyInput | MoodEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MoodEntry createManyAndReturn
+   */
+  export type MoodEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * The data used to create many MoodEntries.
+     */
+    data: MoodEntryCreateManyInput | MoodEntryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MoodEntry update
+   */
+  export type MoodEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MoodEntry.
+     */
+    data: XOR<MoodEntryUpdateInput, MoodEntryUncheckedUpdateInput>
+    /**
+     * Choose, which MoodEntry to update.
+     */
+    where: MoodEntryWhereUniqueInput
+  }
+
+  /**
+   * MoodEntry updateMany
+   */
+  export type MoodEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MoodEntries.
+     */
+    data: XOR<MoodEntryUpdateManyMutationInput, MoodEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which MoodEntries to update
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * Limit how many MoodEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MoodEntry updateManyAndReturn
+   */
+  export type MoodEntryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * The data used to update MoodEntries.
+     */
+    data: XOR<MoodEntryUpdateManyMutationInput, MoodEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which MoodEntries to update
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * Limit how many MoodEntries to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MoodEntry upsert
+   */
+  export type MoodEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MoodEntry to update in case it exists.
+     */
+    where: MoodEntryWhereUniqueInput
+    /**
+     * In case the MoodEntry found by the `where` argument doesn't exist, create a new MoodEntry with this data.
+     */
+    create: XOR<MoodEntryCreateInput, MoodEntryUncheckedCreateInput>
+    /**
+     * In case the MoodEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MoodEntryUpdateInput, MoodEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * MoodEntry delete
+   */
+  export type MoodEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    /**
+     * Filter which MoodEntry to delete.
+     */
+    where: MoodEntryWhereUniqueInput
+  }
+
+  /**
+   * MoodEntry deleteMany
+   */
+  export type MoodEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MoodEntries to delete
+     */
+    where?: MoodEntryWhereInput
+    /**
+     * Limit how many MoodEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MoodEntry without action
+   */
+  export type MoodEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model User
@@ -881,6 +2125,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -888,6 +2133,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -895,6 +2141,7 @@ export namespace Prisma {
     email: number
     password: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -904,6 +2151,7 @@ export namespace Prisma {
     email?: true
     password?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -911,6 +2159,7 @@ export namespace Prisma {
     email?: true
     password?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -918,6 +2167,7 @@ export namespace Prisma {
     email?: true
     password?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -998,6 +2248,7 @@ export namespace Prisma {
     email: string
     password: string
     createdAt: Date
+    updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1022,6 +2273,9 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    moodEntries?: boolean | User$moodEntriesArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1029,6 +2283,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1036,6 +2291,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1043,18 +2299,28 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    moodEntries?: boolean | User$moodEntriesArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      moodEntries: Prisma.$MoodEntryPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
       password: string
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1449,6 +2715,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    moodEntries<T extends User$moodEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$moodEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoodEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1482,6 +2749,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -1498,6 +2766,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -1517,6 +2789,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1534,6 +2810,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -1583,6 +2863,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -1630,6 +2914,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which Users to fetch.
      */
@@ -1679,6 +2967,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
@@ -1726,6 +3018,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -1793,6 +3089,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -1819,6 +3119,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -1839,6 +3143,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.moodEntries
+   */
+  export type User$moodEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MoodEntry
+     */
+    select?: MoodEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MoodEntry
+     */
+    omit?: MoodEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MoodEntryInclude<ExtArgs> | null
+    where?: MoodEntryWhereInput
+    orderBy?: MoodEntryOrderByWithRelationInput | MoodEntryOrderByWithRelationInput[]
+    cursor?: MoodEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MoodEntryScalarFieldEnum | MoodEntryScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1850,6 +3178,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
   }
 
 
@@ -1867,11 +3199,25 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const MoodEntryScalarFieldEnum: {
+    id: 'id',
+    mood: 'mood',
+    note: 'note',
+    aiEmotion: 'aiEmotion',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    userId: 'userId'
+  };
+
+  export type MoodEntryScalarFieldEnum = (typeof MoodEntryScalarFieldEnum)[keyof typeof MoodEntryScalarFieldEnum]
+
+
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
     password: 'password',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1891,6 +3237,14 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -1913,6 +3267,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1927,21 +3295,88 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
+   * Reference to a field of type 'Float'
    */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
   /**
-   * Reference to a field of type 'Int[]'
+   * Reference to a field of type 'Float[]'
    */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
    */
 
+
+  export type MoodEntryWhereInput = {
+    AND?: MoodEntryWhereInput | MoodEntryWhereInput[]
+    OR?: MoodEntryWhereInput[]
+    NOT?: MoodEntryWhereInput | MoodEntryWhereInput[]
+    id?: StringFilter<"MoodEntry"> | string
+    mood?: IntFilter<"MoodEntry"> | number
+    note?: StringNullableFilter<"MoodEntry"> | string | null
+    aiEmotion?: StringNullableFilter<"MoodEntry"> | string | null
+    createdAt?: DateTimeFilter<"MoodEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"MoodEntry"> | Date | string
+    userId?: StringFilter<"MoodEntry"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type MoodEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    mood?: SortOrder
+    note?: SortOrderInput | SortOrder
+    aiEmotion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type MoodEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MoodEntryWhereInput | MoodEntryWhereInput[]
+    OR?: MoodEntryWhereInput[]
+    NOT?: MoodEntryWhereInput | MoodEntryWhereInput[]
+    mood?: IntFilter<"MoodEntry"> | number
+    note?: StringNullableFilter<"MoodEntry"> | string | null
+    aiEmotion?: StringNullableFilter<"MoodEntry"> | string | null
+    createdAt?: DateTimeFilter<"MoodEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"MoodEntry"> | Date | string
+    userId?: StringFilter<"MoodEntry"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type MoodEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    mood?: SortOrder
+    note?: SortOrderInput | SortOrder
+    aiEmotion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    _count?: MoodEntryCountOrderByAggregateInput
+    _avg?: MoodEntryAvgOrderByAggregateInput
+    _max?: MoodEntryMaxOrderByAggregateInput
+    _min?: MoodEntryMinOrderByAggregateInput
+    _sum?: MoodEntrySumOrderByAggregateInput
+  }
+
+  export type MoodEntryScalarWhereWithAggregatesInput = {
+    AND?: MoodEntryScalarWhereWithAggregatesInput | MoodEntryScalarWhereWithAggregatesInput[]
+    OR?: MoodEntryScalarWhereWithAggregatesInput[]
+    NOT?: MoodEntryScalarWhereWithAggregatesInput | MoodEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MoodEntry"> | string
+    mood?: IntWithAggregatesFilter<"MoodEntry"> | number
+    note?: StringNullableWithAggregatesFilter<"MoodEntry"> | string | null
+    aiEmotion?: StringNullableWithAggregatesFilter<"MoodEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MoodEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MoodEntry"> | Date | string
+    userId?: StringWithAggregatesFilter<"MoodEntry"> | string
+  }
 
   export type UserWhereInput = {
     AND?: UserWhereInput | UserWhereInput[]
@@ -1951,6 +3386,8 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    moodEntries?: MoodEntryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -1958,6 +3395,8 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    moodEntries?: MoodEntryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -1968,6 +3407,8 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     password?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    moodEntries?: MoodEntryListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -1975,6 +3416,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -1988,6 +3430,76 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type MoodEntryCreateInput = {
+    id?: string
+    mood: number
+    note?: string | null
+    aiEmotion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutMoodEntriesInput
+  }
+
+  export type MoodEntryUncheckedCreateInput = {
+    id?: string
+    mood: number
+    note?: string | null
+    aiEmotion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type MoodEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMoodEntriesNestedInput
+  }
+
+  export type MoodEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MoodEntryCreateManyInput = {
+    id?: string
+    mood: number
+    note?: string | null
+    aiEmotion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type MoodEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MoodEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateInput = {
@@ -1995,6 +3507,8 @@ export namespace Prisma {
     email: string
     password: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    moodEntries?: MoodEntryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -2002,6 +3516,8 @@ export namespace Prisma {
     email: string
     password: string
     createdAt?: Date | string
+    updatedAt?: Date | string
+    moodEntries?: MoodEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -2009,6 +3525,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    moodEntries?: MoodEntryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -2016,6 +3534,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    moodEntries?: MoodEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -2023,6 +3543,7 @@ export namespace Prisma {
     email: string
     password: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -2030,6 +3551,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -2037,6 +3559,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -2054,6 +3577,32 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -2065,25 +3614,52 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type UserCountOrderByAggregateInput = {
-    id?: SortOrder
-    email?: SortOrder
-    password?: SortOrder
-    createdAt?: SortOrder
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
-  export type UserMaxOrderByAggregateInput = {
-    id?: SortOrder
-    email?: SortOrder
-    password?: SortOrder
-    createdAt?: SortOrder
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
-  export type UserMinOrderByAggregateInput = {
+  export type MoodEntryCountOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
-    password?: SortOrder
+    mood?: SortOrder
+    note?: SortOrder
+    aiEmotion?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MoodEntryAvgOrderByAggregateInput = {
+    mood?: SortOrder
+  }
+
+  export type MoodEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    mood?: SortOrder
+    note?: SortOrder
+    aiEmotion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MoodEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    mood?: SortOrder
+    note?: SortOrder
+    aiEmotion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type MoodEntrySumOrderByAggregateInput = {
+    mood?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -2104,6 +3680,40 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -2118,12 +3728,114 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type MoodEntryListRelationFilter = {
+    every?: MoodEntryWhereInput
+    some?: MoodEntryWhereInput
+    none?: MoodEntryWhereInput
+  }
+
+  export type MoodEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    password?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserCreateNestedOneWithoutMoodEntriesInput = {
+    create?: XOR<UserCreateWithoutMoodEntriesInput, UserUncheckedCreateWithoutMoodEntriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMoodEntriesInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type UserUpdateOneRequiredWithoutMoodEntriesNestedInput = {
+    create?: XOR<UserCreateWithoutMoodEntriesInput, UserUncheckedCreateWithoutMoodEntriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMoodEntriesInput
+    upsert?: UserUpsertWithoutMoodEntriesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMoodEntriesInput, UserUpdateWithoutMoodEntriesInput>, UserUncheckedUpdateWithoutMoodEntriesInput>
+  }
+
+  export type MoodEntryCreateNestedManyWithoutUserInput = {
+    create?: XOR<MoodEntryCreateWithoutUserInput, MoodEntryUncheckedCreateWithoutUserInput> | MoodEntryCreateWithoutUserInput[] | MoodEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MoodEntryCreateOrConnectWithoutUserInput | MoodEntryCreateOrConnectWithoutUserInput[]
+    createMany?: MoodEntryCreateManyUserInputEnvelope
+    connect?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+  }
+
+  export type MoodEntryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MoodEntryCreateWithoutUserInput, MoodEntryUncheckedCreateWithoutUserInput> | MoodEntryCreateWithoutUserInput[] | MoodEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MoodEntryCreateOrConnectWithoutUserInput | MoodEntryCreateOrConnectWithoutUserInput[]
+    createMany?: MoodEntryCreateManyUserInputEnvelope
+    connect?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+  }
+
+  export type MoodEntryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MoodEntryCreateWithoutUserInput, MoodEntryUncheckedCreateWithoutUserInput> | MoodEntryCreateWithoutUserInput[] | MoodEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MoodEntryCreateOrConnectWithoutUserInput | MoodEntryCreateOrConnectWithoutUserInput[]
+    upsert?: MoodEntryUpsertWithWhereUniqueWithoutUserInput | MoodEntryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MoodEntryCreateManyUserInputEnvelope
+    set?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    disconnect?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    delete?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    connect?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    update?: MoodEntryUpdateWithWhereUniqueWithoutUserInput | MoodEntryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MoodEntryUpdateManyWithWhereWithoutUserInput | MoodEntryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MoodEntryScalarWhereInput | MoodEntryScalarWhereInput[]
+  }
+
+  export type MoodEntryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MoodEntryCreateWithoutUserInput, MoodEntryUncheckedCreateWithoutUserInput> | MoodEntryCreateWithoutUserInput[] | MoodEntryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MoodEntryCreateOrConnectWithoutUserInput | MoodEntryCreateOrConnectWithoutUserInput[]
+    upsert?: MoodEntryUpsertWithWhereUniqueWithoutUserInput | MoodEntryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MoodEntryCreateManyUserInputEnvelope
+    set?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    disconnect?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    delete?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    connect?: MoodEntryWhereUniqueInput | MoodEntryWhereUniqueInput[]
+    update?: MoodEntryUpdateWithWhereUniqueWithoutUserInput | MoodEntryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MoodEntryUpdateManyWithWhereWithoutUserInput | MoodEntryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MoodEntryScalarWhereInput | MoodEntryScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -2138,6 +3850,31 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -2168,7 +3905,7 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -2176,7 +3913,51 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -2191,6 +3972,147 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type UserCreateWithoutMoodEntriesInput = {
+    id?: string
+    email: string
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutMoodEntriesInput = {
+    id?: string
+    email: string
+    password: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutMoodEntriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMoodEntriesInput, UserUncheckedCreateWithoutMoodEntriesInput>
+  }
+
+  export type UserUpsertWithoutMoodEntriesInput = {
+    update: XOR<UserUpdateWithoutMoodEntriesInput, UserUncheckedUpdateWithoutMoodEntriesInput>
+    create: XOR<UserCreateWithoutMoodEntriesInput, UserUncheckedCreateWithoutMoodEntriesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMoodEntriesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMoodEntriesInput, UserUncheckedUpdateWithoutMoodEntriesInput>
+  }
+
+  export type UserUpdateWithoutMoodEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutMoodEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MoodEntryCreateWithoutUserInput = {
+    id?: string
+    mood: number
+    note?: string | null
+    aiEmotion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MoodEntryUncheckedCreateWithoutUserInput = {
+    id?: string
+    mood: number
+    note?: string | null
+    aiEmotion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MoodEntryCreateOrConnectWithoutUserInput = {
+    where: MoodEntryWhereUniqueInput
+    create: XOR<MoodEntryCreateWithoutUserInput, MoodEntryUncheckedCreateWithoutUserInput>
+  }
+
+  export type MoodEntryCreateManyUserInputEnvelope = {
+    data: MoodEntryCreateManyUserInput | MoodEntryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MoodEntryUpsertWithWhereUniqueWithoutUserInput = {
+    where: MoodEntryWhereUniqueInput
+    update: XOR<MoodEntryUpdateWithoutUserInput, MoodEntryUncheckedUpdateWithoutUserInput>
+    create: XOR<MoodEntryCreateWithoutUserInput, MoodEntryUncheckedCreateWithoutUserInput>
+  }
+
+  export type MoodEntryUpdateWithWhereUniqueWithoutUserInput = {
+    where: MoodEntryWhereUniqueInput
+    data: XOR<MoodEntryUpdateWithoutUserInput, MoodEntryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MoodEntryUpdateManyWithWhereWithoutUserInput = {
+    where: MoodEntryScalarWhereInput
+    data: XOR<MoodEntryUpdateManyMutationInput, MoodEntryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MoodEntryScalarWhereInput = {
+    AND?: MoodEntryScalarWhereInput | MoodEntryScalarWhereInput[]
+    OR?: MoodEntryScalarWhereInput[]
+    NOT?: MoodEntryScalarWhereInput | MoodEntryScalarWhereInput[]
+    id?: StringFilter<"MoodEntry"> | string
+    mood?: IntFilter<"MoodEntry"> | number
+    note?: StringNullableFilter<"MoodEntry"> | string | null
+    aiEmotion?: StringNullableFilter<"MoodEntry"> | string | null
+    createdAt?: DateTimeFilter<"MoodEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"MoodEntry"> | Date | string
+    userId?: StringFilter<"MoodEntry"> | string
+  }
+
+  export type MoodEntryCreateManyUserInput = {
+    id?: string
+    mood: number
+    note?: string | null
+    aiEmotion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MoodEntryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MoodEntryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MoodEntryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    mood?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    aiEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

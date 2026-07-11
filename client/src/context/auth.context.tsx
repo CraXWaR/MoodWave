@@ -3,9 +3,7 @@ import type { AuthContext, UserResponse } from "../types/user.type";
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserResponse | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,13 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  const setAuthUser = ({
-    token,
-    user,
-  }: {
-    token: string;
-    user: UserResponse;
-  }) => {
+  const setAuthUser = ({ token, user }: { token: string; user: UserResponse }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
     setToken(token);
@@ -53,9 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider
-      value={{ isLoggedIn, token, user, setUser, loading, setAuthUser, logout }}
-    >
+    <AuthContext.Provider value={{ isLoggedIn, token, user, setUser, loading, setAuthUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

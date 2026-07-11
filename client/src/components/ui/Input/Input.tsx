@@ -20,25 +20,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <label htmlFor={inputId} className={styles.label}>
           {label}
         </label>
-        <div
-          className={[
-            styles.inputWrap,
-            invalid ? styles.inputWrapError : "",
-          ].join(" ")}
-        >
+        <div className={[styles.inputWrap, invalid ? styles.inputWrapError : ""].join(" ")}>
           <input
             ref={ref}
             id={inputId}
             className={styles.input}
             aria-invalid={invalid || undefined}
-            aria-describedby={
-              [hintId, describedBy].filter(Boolean).join(" ") || undefined
-            }
+            aria-describedby={[hintId, describedBy].filter(Boolean).join(" ") || undefined}
             {...rest}
           />
-          {rightElement && (
-            <div className={styles.rightElement}>{rightElement}</div>
-          )}
+          {rightElement && <div className={styles.rightElement}>{rightElement}</div>}
         </div>
         {hint && (
           <p id={hintId} className={styles.hint}>

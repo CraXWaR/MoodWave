@@ -1,13 +1,4 @@
-export type LoginValues = {
-  email: string;
-  password: string;
-};
-
-export type RegisterValues = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import type { LoginValues, RegisterValues } from "../types/auth.type";
 
 type Errors<T> = Partial<Record<keyof T, string>>;
 
@@ -18,13 +9,10 @@ export function validateLogin(values: LoginValues): Errors<LoginValues> {
   return errors;
 }
 //TODO: MATCH BE PASSWORD VALIDATION RULES WHEN THEY EXIST
-export function validateRegister(
-  values: RegisterValues,
-): Errors<RegisterValues> {
+export function validateRegister(values: RegisterValues): Errors<RegisterValues> {
   const errors: Errors<RegisterValues> = {};
   if (!values.email.trim()) errors.email = "Email is required";
-  if (values.password.length < 3)
-    errors.password = "Password must be at least 3 characters";
+  if (values.password.length < 3) errors.password = "Password must be at least 3 characters";
   if (values.confirmPassword !== values.password) {
     errors.confirmPassword = "Passwords don't match";
   }

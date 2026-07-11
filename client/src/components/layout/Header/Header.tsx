@@ -4,7 +4,10 @@ import { useAuth } from "../../../context/auth.context";
 
 import styles from "./Header.module.css";
 
-const navLinks = [{ to: "/", label: "Home", end: true }];
+const navLinks = [
+  { to: "/", label: "Home", end: true },
+  { to: "/check-in", label: "Check-in", end: false },
+];
 
 function linkClass({ isActive }: { isActive: boolean }) {
   return [styles.link, isActive ? styles.active : ""].join(" ");
@@ -100,10 +103,7 @@ export function Header() {
         aria-hidden="true"
       />
 
-      <div
-        id="mobile-drawer"
-        className={[styles.drawer, isMenuOpen ? styles.drawerOpen : ""].join(" ")}
-      >
+      <div id="mobile-drawer" className={[styles.drawer, isMenuOpen ? styles.drawerOpen : ""].join(" ")}>
         <nav className={styles.mobileNav}>
           {navLinks.map(({ to, label, end }, i) => (
             <NavLink
@@ -112,7 +112,9 @@ export function Header() {
               end={end}
               className={mobileLinkClass}
               onClick={closeMenu}
-              style={{ transitionDelay: isMenuOpen ? `${60 + i * 40}ms` : "0ms" }}
+              style={{
+                transitionDelay: isMenuOpen ? `${60 + i * 40}ms` : "0ms",
+              }}
             >
               {label}
             </NavLink>

@@ -8,11 +8,7 @@ interface AuthLayoutProps {
   children: ReactNode;
 }
 
-export default function AuthLayout({
-  eyebrow,
-  title,
-  children,
-}: AuthLayoutProps) {
+export default function AuthLayout({ eyebrow, title, children }: AuthLayoutProps) {
   return (
     <div className={styles.page}>
       <section className={styles.brandPanel}>
@@ -24,8 +20,8 @@ export default function AuthLayout({
             has a soundtrack.
           </h1>
           <p className={styles.subhead}>
-            Log how you feel, and MoodWave reads the emotion behind it — then
-            builds a playlist that matches it, or shifts it.
+            Log how you feel, and MoodWave reads the emotion behind it — then builds a playlist that matches it, or
+            shifts it.
           </p>
           <MoodWave />
         </div>

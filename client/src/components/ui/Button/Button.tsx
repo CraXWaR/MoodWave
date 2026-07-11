@@ -10,35 +10,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant = "primary",
-      isLoading,
-      fullWidth,
-      disabled,
-      children,
-      className,
-      ...rest
-    },
-    ref,
-  ) => {
+  ({ variant = "primary", isLoading, fullWidth, disabled, children, className, ...rest }, ref) => {
     return (
       <button
         ref={ref}
-        className={[
-          styles.button,
-          styles[variant],
-          fullWidth ? styles.fullWidth : "",
-          className ?? "",
-        ].join(" ")}
+        className={[styles.button, styles[variant], fullWidth ? styles.fullWidth : "", className ?? ""].join(" ")}
         disabled={disabled || isLoading}
         aria-busy={isLoading || undefined}
         {...rest}
       >
         {isLoading && <span className={styles.spinner} aria-hidden="true" />}
-        <span className={isLoading ? styles.hiddenLabel : undefined}>
-          {children}
-        </span>
+        <span className={isLoading ? styles.hiddenLabel : undefined}>{children}</span>
       </button>
     );
   },

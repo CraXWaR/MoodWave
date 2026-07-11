@@ -1,0 +1,21 @@
+.note {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border-color 0.2s var(--ease-out);
+}
+
+.note::placeholder {
+  color: var(--text-muted);
+}
+
+.note:focus {
+  border-color: var(--accent);
+  outline: none;
+}

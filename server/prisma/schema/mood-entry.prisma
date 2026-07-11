@@ -1,0 +1,13 @@
+model MoodEntry {
+  id            String   @id @default(cuid())
+  mood          Int
+  note          String?
+  aiEmotion     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}

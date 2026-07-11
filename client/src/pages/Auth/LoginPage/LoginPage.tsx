@@ -1,12 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { authService } from "../../../services/auth.service";
-import {
-  validateLogin,
-  type LoginValues,
-} from "../../../helpers/auth.validation";
+import { validateLogin } from "../../../helpers/auth.validation";
 import { useAuthForm } from "../../../hooks/useAuthForm";
 import { useAuth } from "../../../context/auth.context";
+
+import type { LoginValues } from "../../../types/auth.type";
 
 import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout";
 import Input from "../../../components/ui/Input/Input";
@@ -19,10 +18,9 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const successMessage = (location.state as { successMessage?: string } | null)
-    ?.successMessage;
+  const successMessage = (location.state as { successMessage?: string } | null)?.successMessage;
 
-  const { values, errors, allErrors, isSubmitting, handleChange, handleSubmit,} = useAuthForm<LoginValues>(
+  const { values, errors, allErrors, isSubmitting, handleChange, handleSubmit } = useAuthForm<LoginValues>(
     { email: "", password: "" },
     validateLogin,
     async (values) => {
@@ -37,7 +35,6 @@ export default function LoginPage() {
 
   return (
     <AuthLayout eyebrow="Welcome back" title="Sign in">
-
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         {successMessage && (
           <div className={styles.success}>

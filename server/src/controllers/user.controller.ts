@@ -20,7 +20,7 @@ export class UserController {
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });
       }
-      console.log(parsed)
+      console.log(parsed);
       res.status(500).json({ error: "Something went wrong" });
     }
   };
