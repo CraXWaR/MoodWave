@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { MoodEntry } from "../types/entry.type.ts";
+import type { ListEntriesParams, MoodEntry, PaginatedEntries } from "../types/entry.type.ts";
 
 interface CreateMoodEntryPayload {
   mood: number;
@@ -7,6 +7,14 @@ interface CreateMoodEntryPayload {
 }
 
 export const entriesService = {
-  list: () => api.get<MoodEntry[]>("/entries/get-entries"),
+  list: (params?: ListEntriesParams) => {
+    const query = new URLSearchParams();
+    if (params?.limit !== undefined) query.set("limit", String(params.limit));
+    if (params?.offset !== undefined) query.set("offset", String(params.offset));
+
+    const queryString = query.toString();
+    return api.get<PaginatedEntries>(`/entries/get-entries${queryString ? `?${queryString}` : ""}`);
+  },
+
   create: (payload: CreateMoodEntryPayload) => api.post<MoodEntry>("/entries/create", payload),
 };

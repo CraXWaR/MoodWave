@@ -6,8 +6,9 @@
 
 .option,
 .selected {
+  position: relative;
   flex: 1;
-  aspect-ratio: 1;
+  aspect-ratio: 1.5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,6 +27,35 @@
 
 .selected {
   transform: scale(1.08);
+}
+
+.option::after,
+.selected::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out), transform 0.15s var(--ease-out);
+  z-index: 10;
+}
+
+.option:hover::after,
+.option:focus-visible::after,
+.selected:hover::after,
+.selected:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .picker button[data-mood="1"].selected {

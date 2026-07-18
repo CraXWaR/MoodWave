@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { MoodEntryService } from "../services/entry.service.js";
+import { ErrorService } from "../utils/service-error.js";
+import { IListByUserOptions } from "../types/listByUserOptions.interface.js";
 
 interface CreateMoodEntryBody {
   mood: number;
@@ -24,8 +26,23 @@ export class MoodEntryController {
   list = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user.id;
-      const entries = await this.entryService.listByUser(userId);
-      res.status(200).json(entries);
+
+      const limit = req.query.limit ? Number(req.query.limit) : undefined;
+      const offset = req.query.offset ? Number(req.query.offset) : undefined;
+
+      if (limit !== undefined && (isNaN(limit) || limit <= 0 || limit > 100)) {
+        throw new ErrorService("Invalid limit", 400);
+      }
+      if (offset !== undefined && (isNaN(offset) || offset < 0)) {
+        throw new ErrorService("Invalid offset", 400);
+      }
+
+      const options: IListByUserOptions = {};
+      if (limit !== undefined) options.limit = limit;
+      if (offset !== undefined) options.offset = offset;
+
+      const result = await this.entryService.listByUser(userId, options);
+      res.status(200).json(result);
     } catch (err) {
       next(err);
     }

@@ -5,7 +5,7 @@ import { useAuth } from "../../../context/auth.context";
 import styles from "./Header.module.css";
 
 const navLinks = [
-  { to: "/", label: "Home", end: true },
+  { to: "/home", label: "Home", end: true },
   { to: "/check-in", label: "Check-in", end: false },
 ];
 

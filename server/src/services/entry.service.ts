@@ -1,5 +1,14 @@
+import { MoodEntry } from "../../prisma/generated/prisma/index.js";
 import prisma from "../db/prisma.js";
+import { IListByUserOptions } from "../types/listByUserOptions.interface.js";
 import { ErrorService } from "../utils/service-error.js";
+
+interface PaginatedResult<T> {
+  entries: T[];
+  total: number;
+  limit: number;
+  offset: number;
+}
 
 export class MoodEntryService {
   async create(userId: string, mood: number, note?: string) {
@@ -12,11 +21,21 @@ export class MoodEntryService {
     });
   }
 
-  async listByUser(userId: string) {
-    return prisma.moodEntry.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+  async listByUser(
+    userId: string,
+    { limit = 20, offset = 0 }: IListByUserOptions = {},
+  ): Promise<PaginatedResult<MoodEntry>> {
+    const [entries, total] = await Promise.all([
+      prisma.moodEntry.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+        take: limit,
+        skip: offset,
+      }),
+      prisma.moodEntry.count({ where: { userId } }),
+    ]);
+
+    return { entries, total, limit, offset };
   }
 
   async findById(id: string, userId: string) {

@@ -1,13 +1,6 @@
-import styles from "./MoodPicker.module.css";
+import { MOCK_MOODS } from "../../../services/mood.type";
 
-//TODO: Fetch MOODS from DB
-const MOODS = [
-  { value: 1, emoji: "😞", label: "Terrible" },
-  { value: 2, emoji: "😕", label: "Bad" },
-  { value: 3, emoji: "😐", label: "Okay" },
-  { value: 4, emoji: "🙂", label: "Good" },
-  { value: 5, emoji: "😄", label: "Great" },
-];
+import styles from "./MoodPicker.module.css";
 
 interface MoodPickerProps {
   value: number | null;
@@ -17,11 +10,12 @@ interface MoodPickerProps {
 export default function MoodPicker({ value, onChange }: MoodPickerProps) {
   return (
     <div className={styles.picker}>
-      {MOODS.map(({ value: moodValue, emoji, label }) => (
+      {MOCK_MOODS.map(({ value: moodValue, emoji, label }) => (
         <button
           key={moodValue}
           type="button"
           data-mood={moodValue}
+          data-label={label}
           className={value === moodValue ? styles.selected : styles.option}
           onClick={() => onChange(moodValue)}
           aria-pressed={value === moodValue}

@@ -7,6 +7,6 @@ const router = Router();
 const entryController = new MoodEntryController();
 
 router.post("/create", authenticate, entryController.create);
-router.get("/list", authenticate, entryController.list);
+router.get("/get-entries", authenticate, entryController.list);
 
 export default router;

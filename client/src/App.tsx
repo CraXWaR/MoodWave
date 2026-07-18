@@ -3,14 +3,23 @@ import { AuthProvider } from "./context/auth.context";
 
 import { RootLayout } from "./components/layout/RootLayout/RootLayout";
 import { ProtectedRoute } from "./components/routing/ProtectedRoute";
+import { GuestOnlyRoute } from "./components/routing/GuestOnlyRoute";
 
+{
+  /*GuestOnlyPages*/
+}
 import LoginPage from "./pages/Auth/LoginPage/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
+
+{
+  /*ProtectedPages*/
+}
+import HomePage from "./pages/Home/HomePage";
 import CheckInPage from "./pages/CheckInPage/CheckInPage";
 
 import "./App.css";
 
-function HomePage() {
+function HomePageDefault() {
   return (
     <div style={{ padding: 20 }}>
       <h1>MoodWave 🎧</h1>
@@ -26,12 +35,15 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<RootLayout />}>
-            <Route path="/" element={<HomePage />} />
-            {/* TODO GuestOnlyRoute */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-
+            <Route path="/" element={<HomePageDefault />} />
+            {/* GuestOnlyRoute */}
+            <Route element={<GuestOnlyRoute />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
+            {/* ProtectedRoute */}
             <Route element={<ProtectedRoute />}>
+              <Route path="/home" element={<HomePage />} />
               <Route path="/check-in" element={<CheckInPage />} />
             </Route>
           </Route>

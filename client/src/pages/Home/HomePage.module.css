@@ -1,0 +1,130 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+/* ---- Check-in prompt ---- */
+
+.checkInPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.checkInPrompt h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.checkInButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s var(--ease-out);
+}
+
+.checkInButton:hover {
+  background: var(--accent-hover);
+}
+
+/* ---- Recent entries ---- */
+
+.recent h2 {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.entryList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.entryItem {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+
+.entryItem[data-mood="1"] { border-left-color: var(--mood-stressed); }
+.entryItem[data-mood="2"] { border-left-color: var(--mood-sad); }
+.entryItem[data-mood="3"] { border-left-color: var(--mood-burnout); }
+.entryItem[data-mood="4"] { border-left-color: var(--mood-calm); }
+.entryItem[data-mood="5"] { border-left-color: var(--mood-joy); }
+
+.entryDate {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.entryMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entryMoodLabel {
+  font-size: 0.55rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.entryItem[data-mood="1"] .entryMoodLabel { color: var(--mood-stressed-text); }
+.entryItem[data-mood="2"] .entryMoodLabel { color: var(--mood-sad-text); }
+.entryItem[data-mood="3"] .entryMoodLabel { color: var(--mood-burnout-text); }
+.entryItem[data-mood="4"] .entryMoodLabel { color: var(--mood-calm-text); }
+.entryItem[data-mood="5"] .entryMoodLabel { color: var(--mood-joy-text); }
+
+.entryNote {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.error {
+  color: var(--danger);
+}
+
+.viewAll {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}

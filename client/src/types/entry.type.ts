@@ -6,4 +6,16 @@ export type MoodEntry = {
   createdAt: string;
   updatedAt: string;
   userId: string;
-}
+};
+
+export type PaginatedEntries = {
+  entries: MoodEntry[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type ListEntriesParams = {
+  limit?: number;
+  offset?: number;
+};
