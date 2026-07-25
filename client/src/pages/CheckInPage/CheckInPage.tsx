@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CheckInForm from "../../components/checkin/CheckInForm/CheckInForm";
+import { CheckInForm } from "../../components/checkin/CheckInForm/CheckInForm";
 
 import styles from "./CheckInPage.module.css";
 

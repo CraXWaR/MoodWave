@@ -11,7 +11,7 @@ interface CheckInFormProps {
   title?: string;
 }
 
-export default function CheckInForm({ onSuccess, title = "How are you feeling?" }: CheckInFormProps) {
+export function CheckInForm({ onSuccess, title = "How are you feeling?" }: CheckInFormProps) {
   const { mood, setMood, note, setNote, error, isSubmitting, handleSubmit } = useCheckIn({ onSuccess });
 
   return (

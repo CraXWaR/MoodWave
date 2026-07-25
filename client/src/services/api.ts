@@ -33,6 +33,7 @@ async function request<TResponse>(
   }
 
   if (!res.ok) {
+     console.log('error response shape:', data);
     throw new Error(data?.error ?? "Something went wrong. Try again.");
   }
 

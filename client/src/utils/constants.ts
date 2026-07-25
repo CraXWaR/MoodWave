@@ -13,3 +13,7 @@ export const MOCK_MOODS: Mood[] = [
   { value: 4, emoji: "🙂", label: "Calm", token: "calm" },
   { value: 5, emoji: "😄", label: "Joyful", token: "joy" },
 ];
+
+// For testing loading and error states, set forceError to true to simulate an error, 
+// or set delay to a number (in milliseconds) to simulate a delay in the API response.
+export const SIMULATE_STATES = { delay: 2500, forceError: false };

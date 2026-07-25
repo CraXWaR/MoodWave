@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
 import { useEntryHistory } from "../../hooks/useEntryHistory";
 
-import CheckInForm from "../../components/checkin/CheckInForm/CheckInForm";
+import { CheckInForm } from "../../components/checkin/CheckInForm/CheckInForm";
+import { LoadingState } from "../../components/ui/LoadingState/LoadingState";
+import { ErrorState } from "../../components/ui/ErrorState/ErrorState";
 
 import styles from "./HomePage.module.css";
+
 import { MOCK_MOODS } from "../../utils/constants";
 
 export default function HomePage() {
-  const { entries, loading, error, hasMore, loadMore, refetch } = useEntryHistory();
+  const { entries, loading, error, refetch } = useEntryHistory();
 
   const recentEntries = entries.slice(0, 5);
 
@@ -20,8 +23,8 @@ export default function HomePage() {
       <section className={styles.recent}>
         <h2>Recent entries</h2>
 
-        {loading && entries.length === 0 && <p>Loading...</p>}
-        {error && <p className={styles.error}>{error}</p>}
+        {loading && entries.length === 0 && <LoadingState message="Loading your recent entries…" />}
+        {error && <ErrorState message={error} onRetry={refetch} />}
 
         {!loading && !error && recentEntries.length === 0 && (
           <p className={styles.empty}>No entries yet — log your first mood above.</p>

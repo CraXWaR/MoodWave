@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { entriesService } from "../services/entries.service";
 import type { MoodEntry } from "../types/entry.type";
 
+import { SIMULATE_STATES } from "../utils/constants";
+
 const PAGE_SIZE = 10;
 
 export function useEntryHistory() {
@@ -15,6 +17,9 @@ export function useEntryHistory() {
     setLoading(true);
     setError(null);
     try {
+      if (SIMULATE_STATES.delay) await new Promise((r) => setTimeout(r, SIMULATE_STATES.delay));
+      if (SIMULATE_STATES.forceError) throw new Error("Simulated failure for testing");
+
       const result = await entriesService.list({ limit: PAGE_SIZE, offset: targetOffset });
       setEntries((prev) => (targetOffset === 0 ? result.entries : [...prev, ...result.entries]));
       setTotal(result.total);

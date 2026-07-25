@@ -7,11 +7,11 @@ interface CreateMoodEntryPayload {
 }
 
 export const entriesService = {
-  list: (params?: ListEntriesParams) => {
+  list: async (params?: ListEntriesParams) => {
     const query = new URLSearchParams();
     if (params?.limit !== undefined) query.set("limit", String(params.limit));
     if (params?.offset !== undefined) query.set("offset", String(params.offset));
-
+    
     const queryString = query.toString();
     return api.get<PaginatedEntries>(`/entries/get-entries${queryString ? `?${queryString}` : ""}`);
   },
