@@ -6,7 +6,7 @@ interface NoteInputProps {
   id?: string;
 }
 
-export default function NoteInput({ value, onChange, id }: NoteInputProps) {
+export function NoteInput({ value, onChange, id }: NoteInputProps) {
   return (
     <textarea
       name="note"

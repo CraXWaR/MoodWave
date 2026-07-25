@@ -9,7 +9,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   describedBy?: string;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, invalid, hint, rightElement, describedBy, id, className, ...rest }, ref) => {
     const generatedId = useId();
     const inputId = id ?? generatedId;
@@ -40,5 +40,3 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     );
   },
 );
-
-export default Input;

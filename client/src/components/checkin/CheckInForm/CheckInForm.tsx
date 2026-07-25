@@ -1,8 +1,8 @@
 import { useCheckIn } from "../../../hooks/useCheckIn";
 
-import MoodPicker from "../MoodPicker/MoodPicker";
-import NoteInput from "../NoteInput/NoteInput";
-import Button from "../../ui/Button/Button";
+import { MoodPicker } from "../MoodPicker/MoodPicker";
+import { NoteInput } from "../NoteInput/NoteInput";
+import { Button } from "../../ui/Button/Button";
 
 import styles from "./CheckInForm.module.css";
 

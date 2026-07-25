@@ -7,9 +7,9 @@ import { useAuth } from "../../../context/auth.context";
 
 import type { LoginValues } from "../../../types/auth.type";
 
-import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout";
-import Input from "../../../components/ui/Input/Input";
-import Button from "../../../components/ui/Button/Button";
+import { AuthLayout } from "../../../components/auth/AuthLayout/AuthLayout";
+import { Input } from "../../../components/ui/Input/Input";
+import { Button } from "../../../components/ui/Button/Button";
 
 import styles from "./LoginPage.module.css";
 

@@ -4,7 +4,7 @@ import { useEntryHistory } from "../../hooks/useEntryHistory";
 import CheckInForm from "../../components/checkin/CheckInForm/CheckInForm";
 
 import styles from "./HomePage.module.css";
-import { MOCK_MOODS } from "../../services/mood.type";
+import { MOCK_MOODS } from "../../utils/constants";
 
 export default function HomePage() {
   const { entries, loading, error, hasMore, loadMore, refetch } = useEntryHistory();

@@ -6,9 +6,9 @@ import { useAuthForm } from "../../../hooks/useAuthForm";
 
 import type { RegisterValues } from "../../../types/auth.type";
 
-import AuthLayout from "../../../components/auth/AuthLayout/AuthLayout";
-import Input from "../../../components/ui/Input/Input";
-import Button from "../../../components/ui/Button/Button";
+import { AuthLayout } from "../../../components/auth/AuthLayout/AuthLayout";
+import { Input } from "../../../components/ui/Input/Input";
+import { Button } from "../../../components/ui/Button/Button";
 
 import styles from "./RegisterPage.module.css";
 

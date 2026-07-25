@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { entriesService } from "../services/entries.service";
 import type { MoodEntry } from "../types/entry.type";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 export function useEntryHistory() {
   const [entries, setEntries] = useState<MoodEntry[]>([]);

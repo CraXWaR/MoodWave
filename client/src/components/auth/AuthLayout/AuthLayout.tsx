@@ -8,7 +8,7 @@ interface AuthLayoutProps {
   children: ReactNode;
 }
 
-export default function AuthLayout({ eyebrow, title, children }: AuthLayoutProps) {
+export function AuthLayout({ eyebrow, title, children }: AuthLayoutProps) {
   return (
     <div className={styles.page}>
       <section className={styles.brandPanel}>
