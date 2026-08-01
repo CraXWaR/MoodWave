@@ -8,6 +8,7 @@ import { GuestOnlyRoute } from "./components/routing/GuestOnlyRoute";
 {
   /*GuestOnlyPages*/
 }
+import GuestHomePage from "./pages/GuestHome/GuestHomePage";
 import LoginPage from "./pages/Auth/LoginPage/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 
@@ -20,23 +21,13 @@ import HistoryPage from "./pages/History/HistoryPage";
 
 import "./App.css";
 
-function HomePageDefault() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>MoodWave 🎧</h1>
-
-      <p>Hi There!</p>
-    </div>
-  );
-}
-
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<RootLayout />}>
-            <Route path="/" element={<HomePageDefault />} />
+            <Route path="/" element={<GuestHomePage />} />
             {/* GuestOnlyRoute */}
             <Route element={<GuestOnlyRoute />}>
               <Route path="/login" element={<LoginPage />} />
