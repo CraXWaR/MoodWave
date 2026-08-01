@@ -130,6 +130,16 @@ exports.Prisma.MoodEntryScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.MoodScalarFieldEnum = {
+  id: 'id',
+  value: 'value',
+  token: 'token',
+  emoji: 'emoji',
+  label: 'label',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -156,6 +166,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   MoodEntry: 'MoodEntry',
+  Mood: 'Mood',
   User: 'User'
 };
 

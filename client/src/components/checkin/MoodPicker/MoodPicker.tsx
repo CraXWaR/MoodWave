@@ -1,16 +1,17 @@
-import { MOCK_MOODS } from "../../../utils/constants";
+import type { Mood } from "../../../types/mood.type";
 
 import styles from "./MoodPicker.module.css";
 
 interface MoodPickerProps {
+  moods: Mood[];
   value: number | null;
   onChange: (value: number) => void;
 }
 
-export function MoodPicker({ value, onChange }: MoodPickerProps) {
+export function MoodPicker({moods, value, onChange }: MoodPickerProps) {
   return (
     <div className={styles.picker}>
-      {MOCK_MOODS.map(({ value: moodValue, emoji, label }) => (
+      {moods.map(({ value: moodValue, emoji, label }) => (
         <button
           key={moodValue}
           type="button"
