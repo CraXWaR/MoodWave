@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 
 import { useEntryHistory } from "../../hooks/useEntryHistory";
+import { useGetMoods } from "../../hooks/useMoods";
+
 import { groupByDay } from "../../utils/historyGrouping";
+
 import { HistoryHeader } from "../../components/history/HistoryHeader/HistoryHeader";
 import { HistoryEmptyState } from "../../components/history/HistoryEmptyState/HistoryEmptyState";
 import { HistoryDayGroup } from "../../components/history/HistoryDayGroup/HistoryDayGroup";
@@ -10,7 +13,6 @@ import { LoadingState } from "../../components/ui/LoadingState/LoadingState";
 import { ErrorState } from "../../components/ui/ErrorState/ErrorState";
 
 import styles from "./HistoryPage.module.css";
-import { useGetMoods } from "../../hooks/useMoods";
 
 export default function HistoryPage() {
   const {

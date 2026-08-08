@@ -4,9 +4,6 @@ import { WaveForm } from "../../components/ui/WaveForm/WaveForm";
 
 import styles from "./GuestHomePage.module.css";
 
-// Swap this for your real src/constants/moods.ts MOODS array if want
-// the waveform colors to stay in sync with the actual app.
-
 export default function GuestHomePage() {
   return (
     <div className={styles.page}>
@@ -33,7 +30,7 @@ export default function GuestHomePage() {
           <WaveForm variant="hero" />
         </section>
 
-        <WaveForm variant="divider" />
+        {/* <WaveForm variant="divider" /> */}
 
         <section className={styles.howItWorks}>
           <div className={`${styles.card} ${styles.railCalm}`}>

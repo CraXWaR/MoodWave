@@ -2,6 +2,7 @@ import { MoodEntry } from "../../prisma/generated/prisma/index.js";
 import prisma from "../db/prisma.js";
 import { IListByUserOptions } from "../types/listByUserOptions.interface.js";
 import { ErrorService } from "../utils/service-error.js";
+import { AiService } from "./ai.service.js";
 
 interface PaginatedResult<T> {
   entries: T[];
@@ -11,14 +12,19 @@ interface PaginatedResult<T> {
 }
 
 export class MoodEntryService {
+  private aiService = new AiService();
+
   async create(userId: string, mood: number, note?: string) {
     if (!Number.isInteger(mood) || mood < 1 || mood > 5) {
       throw new ErrorService("Mood must be a number between 1 and 5", 400);
     }
 
-    return prisma.moodEntry.create({
+    const entry = await prisma.moodEntry.create({
       data: { userId, mood, note: note ?? null },
     });
+
+    this.detectAndSaveEmotion(entry.id, note ?? null);
+    return entry;
   }
 
   async listByUser(
@@ -48,5 +54,20 @@ export class MoodEntryService {
     }
 
     return entry;
+  }
+
+  private detectAndSaveEmotion(entryId: string, note: string | null): void {
+    this.aiService
+      .detectEmotion(note)
+      .then((aiEmotion) => {
+        if (!aiEmotion) return;
+        return prisma.moodEntry.update({
+          where: { id: entryId },
+          data: { aiEmotion },
+        });
+      })
+      .catch((error) => {
+        console.error(`Failed to save aiEmotion for entry ${entryId}:`, error);
+      });
   }
 }

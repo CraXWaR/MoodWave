@@ -60,54 +60,6 @@
   gap: 10px;
 }
 
-.entryItem {
-  padding: 14px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--border-strong);
-  border-radius: var(--radius);
-}
-
-.entryItem[data-mood="1"] { border-left-color: var(--mood-stressed); }
-.entryItem[data-mood="2"] { border-left-color: var(--mood-sad); }
-.entryItem[data-mood="3"] { border-left-color: var(--mood-burnout); }
-.entryItem[data-mood="4"] { border-left-color: var(--mood-calm); }
-.entryItem[data-mood="5"] { border-left-color: var(--mood-joy); }
-
-.entryDate {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.entryMeta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.entryMoodLabel {
-  font-size: 0.55rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-style: italic;
-  letter-spacing: 0.02em;
-}
-
-.entryItem[data-mood="1"] .entryMoodLabel { color: var(--mood-stressed-text); }
-.entryItem[data-mood="2"] .entryMoodLabel { color: var(--mood-sad-text); }
-.entryItem[data-mood="3"] .entryMoodLabel { color: var(--mood-burnout-text); }
-.entryItem[data-mood="4"] .entryMoodLabel { color: var(--mood-calm-text); }
-.entryItem[data-mood="5"] .entryMoodLabel { color: var(--mood-joy-text); }
-
-.entryNote {
-  margin: 6px 0 0;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
 .empty {
   color: var(--text-muted);
   font-style: italic;

@@ -5,6 +5,7 @@ import { useGetMoods } from "../../hooks/useMoods";
 import { CheckInForm } from "../../components/checkin/CheckInForm/CheckInForm";
 import { LoadingState } from "../../components/ui/LoadingState/LoadingState";
 import { ErrorState } from "../../components/ui/ErrorState/ErrorState";
+import { HistoryEntryRow } from "../../components/history/HistoryEntryRow/HistoryEntryRow";
 
 import styles from "./HomePage.module.css";
 
@@ -39,13 +40,7 @@ export default function HomePage() {
 
         <ul className={styles.entryList}>
           {recentEntries.map((entry) => (
-            <li key={entry.id} className={styles.entryItem} data-mood={entry.mood}>
-              <div className={styles.entryMeta}>
-                <span className={styles.entryDate}>{new Date(entry.createdAt).toLocaleDateString()}</span>
-                <span className={styles.entryMoodLabel}>{moods.find((mood) => mood.value === entry.mood)?.label}</span>
-              </div>
-              {entry.note && <p className={styles.entryNote}>{entry.note}</p>}
-            </li>
+            <HistoryEntryRow key={entry.id} entry={entry} moods={moods} />
           ))}
         </ul>
 
