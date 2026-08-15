@@ -7,16 +7,16 @@ interface CreateMoodEntryPayload {
 }
 
 export const entriesService = {
-  list: async (params?: ListEntriesParams) => {
+  list: async (params?: ListEntriesParams): Promise<PaginatedEntries> => {
     const query = new URLSearchParams();
     if (params?.limit !== undefined) query.set("limit", String(params.limit));
     if (params?.offset !== undefined) query.set("offset", String(params.offset));
-    
+
     const queryString = query.toString();
     return api.get<PaginatedEntries>(`/entries/get-entries${queryString ? `?${queryString}` : ""}`);
   },
 
-  create: (payload: CreateMoodEntryPayload) => api.post<MoodEntry>("/entries/create", payload),
+  create: (payload: CreateMoodEntryPayload): Promise<MoodEntry> => api.post<MoodEntry>("/entries/create", payload),
 
   getStreak: (): Promise<StreakResponse> => api.get<StreakResponse>("/entries/get-streak"),
 };
