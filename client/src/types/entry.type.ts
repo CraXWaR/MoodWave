@@ -19,3 +19,7 @@ export type ListEntriesParams = {
   limit?: number;
   offset?: number;
 };
+
+export type StreakResponse = {
+  streak: number;
+};

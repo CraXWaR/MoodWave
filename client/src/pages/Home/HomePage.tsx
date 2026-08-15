@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEntryHistory } from "../../hooks/useEntryHistory";
 import { useGetMoods } from "../../hooks/useMoods";
+import { useStreak } from "../../hooks/useStreak";
 
 import { CheckInForm } from "../../components/checkin/CheckInForm/CheckInForm";
 import { LoadingState } from "../../components/ui/LoadingState/LoadingState";
@@ -12,6 +13,7 @@ import styles from "./HomePage.module.css";
 export default function HomePage() {
   const { entries, loading: entriesLoading, error: entriesError, refetch: refetchEntries } = useEntryHistory();
   const { moods, loading: moodsLoading, error: moodsError, refetch: refetchMoods } = useGetMoods();
+  const { streak, isLoading: streakLoading, error: streakError } = useStreak();
 
   const recentEntries = entries.slice(0, 5);
 
@@ -30,6 +32,12 @@ export default function HomePage() {
 
       <section className={styles.recent}>
         <h2>Recent entries</h2>
+
+        {!streakLoading && !streakError && streak !== null && streak > 0 && (
+          <div className={styles.streakBadge}>
+            🔥 <span>{streak} day streak</span>
+          </div>
+        )}
 
         {entriesLoading && entries.length === 0 && <LoadingState message="Loading your recent entries…" />}
         {entriesError && <ErrorState message={entriesError} onRetry={refetchEntries} />}

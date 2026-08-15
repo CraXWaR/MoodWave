@@ -47,4 +47,13 @@ export class MoodEntryController {
       next(err);
     }
   };
+
+  getStreak = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const streak = await this.entryService.getStreak(req.user.id);
+      res.json({ streak });
+    } catch (err) {
+      next(err);
+    }
+  };
 }

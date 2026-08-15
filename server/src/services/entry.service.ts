@@ -2,6 +2,7 @@ import { MoodEntry } from "../../prisma/generated/prisma/index.js";
 import prisma from "../db/prisma.js";
 import { IListByUserOptions } from "../types/listByUserOptions.interface.js";
 import { ErrorService } from "../utils/service-error.js";
+import { StreakCalculation } from "../utils/streak.js";
 import { AiService } from "./ai.service.js";
 
 interface PaginatedResult<T> {
@@ -13,6 +14,7 @@ interface PaginatedResult<T> {
 
 export class MoodEntryService {
   private aiService = new AiService();
+  private streakService = new StreakCalculation();
 
   async create(userId: string, mood: number, note?: string) {
     if (!Number.isInteger(mood) || mood < 1 || mood > 5) {
@@ -54,6 +56,14 @@ export class MoodEntryService {
     }
 
     return entry;
+  }
+
+  async getStreak(userId: string): Promise<number> {
+    const entries = await prisma.moodEntry.findMany({
+      where: { userId },
+      select: { createdAt: true },
+    });
+    return this.streakService.calculateStreak(entries);
   }
 
   private detectAndSaveEmotion(entryId: string, note: string | null): void {

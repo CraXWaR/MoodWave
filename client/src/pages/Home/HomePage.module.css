@@ -43,6 +43,19 @@
   background: var(--accent-hover);
 }
 
+.streakBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display, inherit);
+  font-size: 0.95rem;
+  color: var(--mood-joy-text, var(--accent));
+  background: var(--mood-joy-soft, rgba(0,0,0,0.05));
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  width: fit-content;
+}
+
 /* ---- Recent entries ---- */
 
 .recent h2 {

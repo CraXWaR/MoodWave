@@ -8,5 +8,6 @@ const entryController = new MoodEntryController();
 
 router.post("/create", authenticate, entryController.create);
 router.get("/get-entries", authenticate, entryController.list);
+router.get("/get-streak", authenticate, entryController.getStreak);
 
 export default router;

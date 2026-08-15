@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { ListEntriesParams, MoodEntry, PaginatedEntries } from "../types/entry.type.ts";
+import type { ListEntriesParams, MoodEntry, PaginatedEntries, StreakResponse } from "../types/entry.type.ts";
 
 interface CreateMoodEntryPayload {
   mood: number;
@@ -17,4 +17,6 @@ export const entriesService = {
   },
 
   create: (payload: CreateMoodEntryPayload) => api.post<MoodEntry>("/entries/create", payload),
+
+  getStreak: (): Promise<StreakResponse> => api.get<StreakResponse>("/entries/get-streak"),
 };
