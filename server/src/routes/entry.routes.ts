@@ -9,5 +9,6 @@ const entryController = new MoodEntryController();
 router.post("/create", authenticate, entryController.create);
 router.get("/get-entries", authenticate, entryController.list);
 router.get("/get-streak", authenticate, entryController.getStreak);
+router.get("/get-calendar", authenticate, entryController.getCalendar);
 
 export default router;

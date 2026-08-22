@@ -56,4 +56,14 @@ export class MoodEntryController {
       next(err);
     }
   };
+
+  getCalendar = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id: userId } = req.user;
+      const calendar = await this.entryService.getCalendar(userId);
+      res.status(200).json(calendar);
+    } catch (err) {
+      next(err);
+    }
+  };
 }

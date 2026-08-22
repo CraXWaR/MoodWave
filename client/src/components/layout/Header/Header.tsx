@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { CalendarIcon } from "lucide-react";
+
 import { useAuth } from "../../../context/auth.context";
+import { MoodCalendar } from "../../calendar/MoodCalendar";
 
 import styles from "./Header.module.css";
 
@@ -21,6 +24,8 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLoggedIn, user, loading, logout } = useAuth();
   const navigate = useNavigate();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -37,6 +42,19 @@ export function Header() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (!isCalendarOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isCalendarOpen]);
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -66,6 +84,24 @@ export function Header() {
         <div className={styles.actions}>
           {isLoggedIn ? (
             <>
+              <div className={styles.calendarWrapper} ref={calendarRef}>
+                <button
+                  type="button"
+                  className={styles.calendarToggle}
+                  aria-label={isCalendarOpen ? "Close mood calendar" : "Open mood calendar"}
+                  aria-expanded={isCalendarOpen}
+                  onClick={() => setIsCalendarOpen((open) => !open)}
+                >
+                  <CalendarIcon />
+                </button>
+
+                {isCalendarOpen && (
+                  <div className={styles.calendarPopover}>
+                    <MoodCalendar />
+                  </div>
+                )}
+              </div>
+
               <span className={styles.userEmail}>{user?.email}</span>
               <button type="button" className={styles.logoutButton} onClick={handleLogout}>
                 Log out
@@ -125,6 +161,16 @@ export function Header() {
           <div className={styles.mobileActions}>
             {isLoggedIn ? (
               <>
+                <button
+                  type="button"
+                  className={styles.mobileCalendarToggle}
+                  onClick={() => {
+                    closeMenu();
+                    setIsCalendarOpen(true);
+                  }}
+                >
+                  <CalendarIcon /> Mood calendar
+                </button>
                 <span className={styles.mobileUserEmail}>{user?.email}</span>
                 <button type="button" className={styles.mobileLogoutButton} onClick={handleLogout}>
                   Log out

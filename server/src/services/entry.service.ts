@@ -1,9 +1,11 @@
 import { MoodEntry } from "../../prisma/generated/prisma/index.js";
 import prisma from "../db/prisma.js";
+import { CalendarDay } from "../types/calendar.interface.js";
 import { IListByUserOptions } from "../types/listByUserOptions.interface.js";
 import { ErrorService } from "../utils/service-error.js";
 import { StreakCalculation } from "../utils/streak.js";
 import { AiService } from "./ai.service.js";
+import { CalendarService } from "./calendar.service.js";
 
 interface PaginatedResult<T> {
   entries: T[];
@@ -15,6 +17,7 @@ interface PaginatedResult<T> {
 export class MoodEntryService {
   private aiService = new AiService();
   private streakService = new StreakCalculation();
+  private calendarService = new CalendarService();
 
   async create(userId: string, mood: number, note?: string) {
     if (!Number.isInteger(mood) || mood < 1 || mood > 5) {
@@ -79,5 +82,13 @@ export class MoodEntryService {
       .catch((error) => {
         console.error(`Failed to save aiEmotion for entry ${entryId}:`, error);
       });
+  }
+
+  async getCalendar(userId: string): Promise<CalendarDay[]> {
+    const entries = await prisma.moodEntry.findMany({
+      where: { userId },
+      select: { createdAt: true, mood: true },
+    });
+    return this.calendarService.getCalendar(entries);
   }
 }
