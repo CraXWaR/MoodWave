@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { entriesService } from "../services/entries.service";
 import { invalidateCalendarCache } from "./useGetCalendar";
+import { invalidateMoodsCache } from "./useMoods";
 
 interface UseCheckInOptions {
   onSuccess?: () => void;
@@ -26,7 +27,11 @@ export function useCheckIn({ onSuccess }: UseCheckInOptions = {}) {
     try {
       await entriesService.create({ mood, note: note.trim() || undefined });
       setMood(null);
+
+      // clear the caches so that the next fetch will get new data
       invalidateCalendarCache();
+      invalidateMoodsCache();
+
       setNote("");
       onSuccess?.();
     } catch (err) {

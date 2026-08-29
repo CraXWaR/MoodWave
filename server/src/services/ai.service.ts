@@ -1,15 +1,15 @@
 import { groq } from "../lib/groq.js";
 
-const VALID_TOKENS = ["stressed", "sad", "burnout", "calm", "joy"] as const;
+const VALID_TOKENS = ["stressed", "sad", "burnout", "calm", "joy", "anxious"] as const;
 type MoodToken = (typeof VALID_TOKENS)[number];
 
 const SYSTEM_PROMPT = `You are an emotion classifier for a mood-tracking app.
-Given a short journal note, respond with exactly one of these tokens: stressed, sad, burnout, calm, joy.
+Given a short journal note, respond with exactly one of these tokens: stressed, sad, burnout, calm, joy, anxious.
 If the note is empty, unclear, or doesn't express an emotion, respond with: none.
 Respond with the token only. No punctuation, no explanation, no extra words.`;
 
 export class AiService {
-  private model = "llama-3.3-70b-versatile";
+  private model = "openai/gpt-oss-20b";
 
   async detectEmotion(note: string | null): Promise<MoodToken | null> {
     if (!note || note.trim().length === 0) return null;
@@ -22,10 +22,12 @@ export class AiService {
           { role: "user", content: note },
         ],
         temperature: 0,
-        max_tokens: 10,
+        max_tokens: 50,
+  reasoning_effort: "low",
       });
 
       const raw = completion.choices[0]?.message?.content?.trim().toLowerCase();
+      console.log("Full message:", JSON.stringify(completion.choices[0]?.message, null, 2));
       if (!raw || !this.isValidToken(raw)) return null;
 
       return raw;
