@@ -92,7 +92,7 @@ export function Header() {
                   aria-expanded={isCalendarOpen}
                   onClick={() => setIsCalendarOpen((open) => !open)}
                 >
-                  <CalendarIcon />
+                  <CalendarIcon size={18} strokeWidth={1.75} />
                 </button>
 
                 {isCalendarOpen && (

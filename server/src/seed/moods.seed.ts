@@ -6,6 +6,7 @@ const SEED_MOODS = [
   { value: 3, emoji: "😐", label: "Burnt out", token: "burnout" },
   { value: 4, emoji: "🙂", label: "Calm", token: "calm" },
   { value: 5, emoji: "😄", label: "Joyful", token: "joy" },
+  { value: 6, emoji: "😰", label: "Anxious", token: "anxious" },
 ] as const;
 
 export async function seedMoods(prisma: PrismaClient): Promise<void> {

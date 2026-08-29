@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { entriesService } from "../services/entries.service";
+import { invalidateCalendarCache } from "./useGetCalendar";
 
 interface UseCheckInOptions {
   onSuccess?: () => void;
@@ -25,6 +26,7 @@ export function useCheckIn({ onSuccess }: UseCheckInOptions = {}) {
     try {
       await entriesService.create({ mood, note: note.trim() || undefined });
       setMood(null);
+      invalidateCalendarCache();
       setNote("");
       onSuccess?.();
     } catch (err) {
@@ -34,13 +36,5 @@ export function useCheckIn({ onSuccess }: UseCheckInOptions = {}) {
     }
   };
 
-  return {
-    mood,
-    setMood,
-    note,
-    setNote,
-    error,
-    isSubmitting,
-    handleSubmit,
-  };
+  return { mood, setMood, note, setNote, error, isSubmitting, handleSubmit };
 }

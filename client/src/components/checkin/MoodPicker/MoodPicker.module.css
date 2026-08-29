@@ -82,3 +82,8 @@
   background: var(--mood-joy-soft);
   border-color: var(--mood-joy);
 }
+
+.picker button[data-mood="6"].selected {
+  background: var(--mood-anxious-soft);
+  border-color: var(--mood-anxious);
+}

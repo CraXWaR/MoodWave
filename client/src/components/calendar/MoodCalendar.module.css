@@ -87,12 +87,14 @@
 .cell[data-mood="burnout"]  { background: var(--mood-burnout); }
 .cell[data-mood="calm"]     { background: var(--mood-calm); }
 .cell[data-mood="joy"]      { background: var(--mood-joy); }
+.cell[data-mood="anxious"]  { background: var(--mood-anxious); }
 
 .legendItem[data-mood="stressed"] { background: var(--mood-stressed-soft); color: var(--mood-stressed-text); }
 .legendItem[data-mood="sad"]      { background: var(--mood-sad-soft); color: var(--mood-sad-text); }
 .legendItem[data-mood="burnout"]  { background: var(--mood-burnout-soft); color: var(--mood-burnout-text); }
 .legendItem[data-mood="calm"]     { background: var(--mood-calm-soft); color: var(--mood-calm-text); }
 .legendItem[data-mood="joy"]      { background: var(--mood-joy-soft); color: var(--mood-joy-text); }
+.legendItem[data-mood="anxious"]  { background: var(--mood-anxious-soft); color: var(--mood-anxious-text); }
 
 .today {
   border-color: var(--accent) !important;

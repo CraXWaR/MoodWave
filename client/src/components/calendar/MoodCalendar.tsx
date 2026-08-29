@@ -1,5 +1,6 @@
 import { useGetCalendar } from "../../hooks/useGetCalendar";
 import { useGetMoods } from "../../hooks/useMoods";
+
 import styles from "./MoodCalendar.module.css";
 
 const DAYS = 84;

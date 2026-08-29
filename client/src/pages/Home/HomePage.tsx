@@ -31,13 +31,15 @@ export default function HomePage() {
       </section>
 
       <section className={styles.recent}>
-        <h2>Recent entries</h2>
+        <div className={styles.header}>
+          <h2>Recent entries</h2>
 
-        {!streakLoading && !streakError && streak !== null && streak > 0 && (
-          <div className={styles.streakBadge}>
-            🔥 <span>{streak} day streak</span>
-          </div>
-        )}
+          {!streakLoading && !streakError && streak !== null && streak > 0 && (
+            <div className={styles.streakBadge}>
+              🔥 <span>{streak} day streak</span>
+            </div>
+          )}
+        </div>
 
         {entriesLoading && entries.length === 0 && <LoadingState message="Loading your recent entries…" />}
         {entriesError && <ErrorState message={entriesError} onRetry={refetchEntries} />}
