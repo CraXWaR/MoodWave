@@ -1,22 +1,24 @@
 import { Request, Response } from "express";
-import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import { SpotifyService } from "../services/spotify.service.js";
 import { ErrorService } from "../utils/service-error.js";
 import { spotifyCallbackSchema } from "../validators/spotify.validator.js";
 
-// In-memory state store (swap for Redis once that's in place)
-const pendingStates = new Map<string, string>(); // state -> userId
+interface SpotifyStatePayload {
+  userId: string;
+}
 
 export class SpotifyController {
   private spotifyService = new SpotifyService();
 
   login = (req: Request, res: Response) => {
     try {
-      const state = crypto.randomBytes(16).toString("hex");
-      pendingStates.set(state, req.user!.id);
+      const state = jwt.sign({ userId: req.user!.id } as SpotifyStatePayload, process.env.JWT_SECRET as string, {
+        expiresIn: "10m",
+      });
 
       const url = this.spotifyService.getAuthUrl(state);
-      res.redirect(url);
+      res.json({ url });
     } catch (err) {
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });
@@ -38,17 +40,14 @@ export class SpotifyController {
     try {
       const { code, state } = parsed.data;
 
-      const userId = pendingStates.get(state);
-      if (!userId) {
-        throw new ErrorService("Invalid or expired state", 400);
-      }
-      pendingStates.delete(state);
+      const payload = jwt.verify(state, process.env.JWT_SECRET as string) as SpotifyStatePayload;
 
-      await this.spotifyService.handleCallback(userId, code);
-      res.redirect(`${process.env.FRONTEND_URL}/settings?spotify_connected=true`);
+      await this.spotifyService.handleCallback(payload.userId, code);
+
+      res.redirect(`${process.env.FRONTEND_URL}/?spotify_connected=true`);
     } catch (err) {
       console.log(err);
-      res.redirect(`${process.env.FRONTEND_URL}/settings?spotify_error=connection_failed`);
+      res.redirect(`${process.env.FRONTEND_URL}/?spotify_error=connection_failed`);
     }
   };
 
