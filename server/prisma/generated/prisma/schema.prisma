@@ -32,12 +32,27 @@ datasource db {
   provider = "postgresql"
 }
 
+model SpotifyAccount {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  spotifyId    String   @unique
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  scope        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+
+  moodEntries    MoodEntry[]
+  spotifyAccount SpotifyAccount?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  moodEntries MoodEntry[]
 }

@@ -28,7 +28,7 @@ async function request<TResponse>(
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.location.href = "/login";
-    // don't let the caller try to use a broken response
+
     throw new Error("Session expired. Please sign in again.");
   }
 

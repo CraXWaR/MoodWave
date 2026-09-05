@@ -140,6 +140,18 @@ exports.Prisma.MoodScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SpotifyAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  spotifyId: 'spotifyId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  scope: 'scope',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -167,6 +179,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   MoodEntry: 'MoodEntry',
   Mood: 'Mood',
+  SpotifyAccount: 'SpotifyAccount',
   User: 'User'
 };
 

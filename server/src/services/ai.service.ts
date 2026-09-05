@@ -23,7 +23,7 @@ export class AiService {
         ],
         temperature: 0,
         max_tokens: 50,
-  reasoning_effort: "low",
+        reasoning_effort: "low",
       });
 
       const raw = completion.choices[0]?.message?.content?.trim().toLowerCase();
