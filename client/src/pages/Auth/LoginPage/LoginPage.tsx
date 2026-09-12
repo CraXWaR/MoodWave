@@ -12,6 +12,7 @@ import { Input } from "../../../components/ui/Input/Input";
 import { Button } from "../../../components/ui/Button/Button";
 
 import styles from "./LoginPage.module.css";
+import { LoginWithSpotifyButton } from "../../../components/ui/SpotifyButton/LoginWithSpotifyButton";
 
 export default function LoginPage() {
   const { setAuthUser } = useAuth();
@@ -29,7 +30,7 @@ export default function LoginPage() {
         token: res.token,
         user: { id: res.id, email: res.email },
       });
-      navigate("/");
+      navigate("/home");
     },
   );
 
@@ -71,6 +72,8 @@ export default function LoginPage() {
             ))}
           </div>
         )}
+
+        <LoginWithSpotifyButton />
 
         <Button type="submit" fullWidth isLoading={isSubmitting}>
           Sign in

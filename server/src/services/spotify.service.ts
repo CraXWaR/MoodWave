@@ -1,5 +1,6 @@
 import prisma from "../db/prisma.js";
 import { ErrorService } from "../utils/service-error.js";
+import { generateAuthToken } from "../utils/token.js";
 
 const SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize";
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
@@ -18,6 +19,15 @@ interface SpotifyTokenResponse {
 interface SpotifyMeResponse {
   id: string;
   email: string;
+}
+
+interface SpotifyProfile {
+  id: string;
+  email: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: Date;
+  scope: string;
 }
 
 export class SpotifyService {
@@ -72,47 +82,24 @@ export class SpotifyService {
     return response.json();
   }
 
-  async handleCallback(userId: string, code: string) {
+  private async exchangeCodeForProfile(code: string) {
     const tokenData = await this.exchangeCodeForToken(code);
-    const profile = await this.fetchSpotifyProfile(tokenData.access_token);
 
     if (!tokenData.refresh_token) {
       throw new ErrorService("Spotify did not return a refresh token", 502);
     }
 
+    const profile = await this.fetchSpotifyProfile(tokenData.access_token);
     const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000);
 
-    return prisma.spotifyAccount.upsert({
-      where: { userId },
-      update: {
-        spotifyId: profile.id,
-        accessToken: tokenData.access_token,
-        refreshToken: tokenData.refresh_token,
-        expiresAt,
-        scope: tokenData.scope,
-      },
-      create: {
-        userId,
-        spotifyId: profile.id,
-        accessToken: tokenData.access_token,
-        refreshToken: tokenData.refresh_token,
-        expiresAt,
-        scope: tokenData.scope,
-      },
-    });
-  }
-
-  async getValidAccessToken(userId: string) {
-    const account = await prisma.spotifyAccount.findUnique({ where: { userId } });
-    if (!account) {
-      throw new ErrorService("Spotify account not connected", 404);
-    }
-
-    if (account.expiresAt.getTime() > Date.now() + 60_000) {
-      return account.accessToken;
-    }
-
-    return this.refreshAccessToken(userId, account.refreshToken);
+    return {
+      id: profile.id,
+      email: profile.email,
+      accessToken: tokenData.access_token,
+      refreshToken: tokenData.refresh_token,
+      expiresAt,
+      scope: tokenData.scope,
+    };
   }
 
   private async refreshAccessToken(userId: string, refreshToken: string) {
@@ -153,6 +140,42 @@ export class SpotifyService {
     return updated.accessToken;
   }
 
+  async handleCallback(userId: string, code: string) {
+    const profile = await this.exchangeCodeForProfile(code);
+
+    return prisma.spotifyAccount.upsert({
+      where: { userId },
+      update: {
+        spotifyId: profile.id,
+        accessToken: profile.accessToken,
+        refreshToken: profile.refreshToken,
+        expiresAt: profile.expiresAt,
+        scope: profile.scope,
+      },
+      create: {
+        userId,
+        spotifyId: profile.id,
+        accessToken: profile.accessToken,
+        refreshToken: profile.refreshToken,
+        expiresAt: profile.expiresAt,
+        scope: profile.scope,
+      },
+    });
+  }
+
+  async getValidAccessToken(userId: string) {
+    const account = await prisma.spotifyAccount.findUnique({ where: { userId } });
+    if (!account) {
+      throw new ErrorService("Spotify account not connected", 404);
+    }
+
+    if (account.expiresAt.getTime() > Date.now() + 60_000) {
+      return account.accessToken;
+    }
+
+    return this.refreshAccessToken(userId, account.refreshToken);
+  }
+
   async disconnect(userId: string) {
     await prisma.spotifyAccount.delete({ where: { userId } });
   }
@@ -160,5 +183,60 @@ export class SpotifyService {
   async getStatus(userId: string) {
     const account = await prisma.spotifyAccount.findUnique({ where: { userId } });
     return { connected: !!account };
+  }
+
+  async findOrCreateSpotifyAccount(spotifyProfile: SpotifyProfile) {
+    const existingAccount = await prisma.spotifyAccount.findUnique({
+      where: { spotifyId: spotifyProfile.id },
+      include: { user: true },
+    });
+
+    if (existingAccount) {
+      await prisma.spotifyAccount.update({
+        where: { spotifyId: spotifyProfile.id },
+        data: {
+          accessToken: spotifyProfile.accessToken,
+          refreshToken: spotifyProfile.refreshToken,
+          expiresAt: spotifyProfile.expiresAt,
+          scope: spotifyProfile.scope,
+        },
+      });
+
+      const token = generateAuthToken(existingAccount.user.id);
+      return { user: existingAccount.user, token };
+    }
+
+    const existingUserByEmail = await prisma.user.findUnique({
+      where: { email: spotifyProfile.email },
+    });
+
+    const user = await prisma.$transaction(async (tx) => {
+      const targetUser =
+        existingUserByEmail ??
+        (await tx.user.create({
+          data: { email: spotifyProfile.email, password: null },
+        }));
+
+      await tx.spotifyAccount.create({
+        data: {
+          userId: targetUser.id,
+          spotifyId: spotifyProfile.id,
+          accessToken: spotifyProfile.accessToken,
+          refreshToken: spotifyProfile.refreshToken,
+          expiresAt: spotifyProfile.expiresAt,
+          scope: spotifyProfile.scope,
+        },
+      });
+
+      return targetUser;
+    });
+
+    const token = generateAuthToken(user.id);
+    return { user, token };
+  }
+
+  async loginWithSpotify(code: string) {
+    const profile = await this.exchangeCodeForProfile(code);
+    return this.findOrCreateSpotifyAccount(profile);
   }
 }

@@ -3,8 +3,34 @@ import { Link } from "react-router-dom";
 import { WaveForm } from "../../components/ui/WaveForm/WaveForm";
 
 import styles from "./GuestHomePage.module.css";
+import { useAuth } from "../../context/auth.context";
+import { useEffect } from "react";
+import { authService } from "../../services/auth.service";
 
 export default function GuestHomePage() {
+  const { setAuthUser } = useAuth();
+
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const spotifyLoginToken = params.get("spotify_login_token");
+
+    if (spotifyLoginToken) {
+      authService
+        .getMe(spotifyLoginToken)
+        .then((user) => {
+          setAuthUser({ token: spotifyLoginToken, user });
+        })
+        .catch((err) => {
+          console.error("Failed to complete Spotify login", err);
+        })
+        .finally(() => {
+          params.delete("spotify_login_token");
+          const newUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ""}`;
+          window.history.replaceState({}, "", newUrl);
+        });
+    }
+  }, []);
   return (
     <div className={styles.page}>
       <main>

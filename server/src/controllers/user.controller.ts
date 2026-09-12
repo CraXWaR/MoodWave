@@ -42,4 +42,17 @@ export class UserController {
       res.status(500).json({ error: "Something went wrong" });
     }
   };
+
+  getMe = async (req: Request, res: Response) => {
+    try {
+      const user = await this.userService.getById(req.user!.id);
+      res.json(user);
+    } catch (err) {
+       console.error("GET /users/me failed:", err);
+      if (err instanceof ErrorService) {
+        return res.status(err.statusCode).json({ error: err.message });
+      }
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  };
 }

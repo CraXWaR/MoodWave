@@ -1,15 +1,9 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import prisma from "../db/prisma.js";
 import { ErrorService } from "../utils/service-error.js";
+import { generateAuthToken } from "../utils/token.js";
 
 export class UserService {
-  private generateToken(userId: string) {
-    return jwt.sign({ id: userId }, process.env.JWT_SECRET as string, {
-      expiresIn: "7d",
-    });
-  }
-
   async signup(email: string, password: string) {
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
@@ -21,7 +15,7 @@ export class UserService {
       data: { email, password: hashed },
     });
 
-    return { user, token: this.generateToken(user.id) };
+    return { user, token: generateAuthToken(user.id) };
   }
 
   async login(email: string, password: string) {
@@ -30,11 +24,21 @@ export class UserService {
       throw new ErrorService("Invalid email or password", 401);
     }
 
+    if (!user.password) {
+      throw new ErrorService("This account uses Spotify login. Please log in with Spotify.", 400);
+    }
+
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       throw new ErrorService("Invalid email or password", 401);
     }
 
-    return { user, token: this.generateToken(user.id) };
+    return { user, token: generateAuthToken(user.id) };
+  }
+
+  async getById(userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new ErrorService("User not found", 404);
+    return user;
   }
 }

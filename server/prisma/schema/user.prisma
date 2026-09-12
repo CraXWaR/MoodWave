@@ -1,7 +1,7 @@
 model User {
   id              String   @id @default(cuid())
   email           String   @unique
-  password        String
+  password        String?
 
   moodEntries     MoodEntry[]
   spotifyAccount  SpotifyAccount?

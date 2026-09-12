@@ -4603,7 +4603,7 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: string
     email: string
-    password: string
+    password: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -4678,7 +4678,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       email: string
-      password: string
+      password: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -5931,7 +5931,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     moodEntries?: MoodEntryListRelationFilter
@@ -5941,7 +5941,7 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     moodEntries?: MoodEntryOrderByRelationAggregateInput
@@ -5954,7 +5954,7 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     moodEntries?: MoodEntryListRelationFilter
@@ -5964,7 +5964,7 @@ export namespace Prisma {
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -5978,7 +5978,7 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
-    password?: StringWithAggregatesFilter<"User"> | string
+    password?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -6208,7 +6208,7 @@ export namespace Prisma {
   export type UserCreateInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     moodEntries?: MoodEntryCreateNestedManyWithoutUserInput
@@ -6218,7 +6218,7 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     moodEntries?: MoodEntryUncheckedCreateNestedManyWithoutUserInput
@@ -6228,7 +6228,7 @@ export namespace Prisma {
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     moodEntries?: MoodEntryUpdateManyWithoutUserNestedInput
@@ -6238,7 +6238,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     moodEntries?: MoodEntryUncheckedUpdateManyWithoutUserNestedInput
@@ -6248,7 +6248,7 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6256,7 +6256,7 @@ export namespace Prisma {
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6264,7 +6264,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6809,7 +6809,7 @@ export namespace Prisma {
   export type UserCreateWithoutMoodEntriesInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     spotifyAccount?: SpotifyAccountCreateNestedOneWithoutUserInput
@@ -6818,7 +6818,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutMoodEntriesInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     spotifyAccount?: SpotifyAccountUncheckedCreateNestedOneWithoutUserInput
@@ -6843,7 +6843,7 @@ export namespace Prisma {
   export type UserUpdateWithoutMoodEntriesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spotifyAccount?: SpotifyAccountUpdateOneWithoutUserNestedInput
@@ -6852,7 +6852,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutMoodEntriesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     spotifyAccount?: SpotifyAccountUncheckedUpdateOneWithoutUserNestedInput
@@ -6861,7 +6861,7 @@ export namespace Prisma {
   export type UserCreateWithoutSpotifyAccountInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     moodEntries?: MoodEntryCreateNestedManyWithoutUserInput
@@ -6870,7 +6870,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutSpotifyAccountInput = {
     id?: string
     email: string
-    password: string
+    password?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     moodEntries?: MoodEntryUncheckedCreateNestedManyWithoutUserInput
@@ -6895,7 +6895,7 @@ export namespace Prisma {
   export type UserUpdateWithoutSpotifyAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     moodEntries?: MoodEntryUpdateManyWithoutUserNestedInput
@@ -6904,7 +6904,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutSpotifyAccountInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     moodEntries?: MoodEntryUncheckedUpdateManyWithoutUserNestedInput
