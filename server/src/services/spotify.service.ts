@@ -38,6 +38,7 @@ export class SpotifyService {
       redirect_uri: process.env.SPOTIFY_REDIRECT_URI as string,
       scope: SCOPES,
       state,
+      show_dialog: "true",
     });
 
     return `${SPOTIFY_AUTH_URL}?${params.toString()}`;
@@ -142,6 +143,14 @@ export class SpotifyService {
 
   async handleCallback(userId: string, code: string) {
     const profile = await this.exchangeCodeForProfile(code);
+
+    const existing = await prisma.spotifyAccount.findUnique({
+      where: { spotifyId: profile.id },
+    });
+
+    if (existing && existing.userId !== userId) {
+      throw new ErrorService("This Spotify account is already linked to another MoodWave account", 409);
+    }
 
     return prisma.spotifyAccount.upsert({
       where: { userId },

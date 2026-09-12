@@ -48,7 +48,6 @@ export class UserController {
       const user = await this.userService.getById(req.user!.id);
       res.json(user);
     } catch (err) {
-       console.error("GET /users/me failed:", err);
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });
       }

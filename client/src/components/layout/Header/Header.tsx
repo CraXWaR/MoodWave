@@ -5,8 +5,9 @@ import { CalendarIcon } from "lucide-react";
 import { useAuth } from "../../../context/auth.context";
 import { MoodCalendar } from "../../calendar/MoodCalendar";
 
+import { SpotifyButton } from "../../ui/SpotifyButton/SpotifyButton";
+
 import styles from "./Header.module.css";
-import { SpotifyConnectButton } from "../../ui/SpotifyButton/SpotifyConnectButton";
 
 const navLinks = [
   { to: "/home", label: "Home", end: true },
@@ -103,7 +104,7 @@ export function Header() {
                 )}
               </div>
 
-              <SpotifyConnectButton />
+              <SpotifyButton />
 
               <span className={styles.userEmail}>{user?.email}</span>
               <button type="button" className={styles.logoutButton} onClick={handleLogout}>

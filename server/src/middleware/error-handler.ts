@@ -7,6 +7,6 @@ export default function errorHandler(err: unknown, req: Request, res: Response, 
     return;
   }
 
-  console.error(err); // unexpected errors — worth logging
+  console.error(err); // unexpected errors -> worth logging
   res.status(500).json({ error: "Something went wrong. Try again." });
 }

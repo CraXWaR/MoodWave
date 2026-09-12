@@ -10,9 +10,9 @@ import type { LoginValues } from "../../../types/auth.type";
 import { AuthLayout } from "../../../components/auth/AuthLayout/AuthLayout";
 import { Input } from "../../../components/ui/Input/Input";
 import { Button } from "../../../components/ui/Button/Button";
+import { SpotifyButton } from "../../../components/ui/SpotifyButton/SpotifyButton";
 
 import styles from "./LoginPage.module.css";
-import { LoginWithSpotifyButton } from "../../../components/ui/SpotifyButton/LoginWithSpotifyButton";
 
 export default function LoginPage() {
   const { setAuthUser } = useAuth();
@@ -73,7 +73,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <LoginWithSpotifyButton />
+        <SpotifyButton />
 
         <Button type="submit" fullWidth isLoading={isSubmitting}>
           Sign in

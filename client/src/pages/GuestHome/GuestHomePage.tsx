@@ -1,39 +1,20 @@
 import { Link } from "react-router-dom";
 
+import { useSpotify } from "../../hooks/useSpotifyButton";
+
 import { WaveForm } from "../../components/ui/WaveForm/WaveForm";
+import { ErrorState } from "../../components/ui/ErrorState/ErrorState";
 
 import styles from "./GuestHomePage.module.css";
-import { useAuth } from "../../context/auth.context";
-import { useEffect } from "react";
-import { authService } from "../../services/auth.service";
 
 export default function GuestHomePage() {
-  const { setAuthUser } = useAuth();
+  const { error } = useSpotify();
 
-  
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const spotifyLoginToken = params.get("spotify_login_token");
-
-    if (spotifyLoginToken) {
-      authService
-        .getMe(spotifyLoginToken)
-        .then((user) => {
-          setAuthUser({ token: spotifyLoginToken, user });
-        })
-        .catch((err) => {
-          console.error("Failed to complete Spotify login", err);
-        })
-        .finally(() => {
-          params.delete("spotify_login_token");
-          const newUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ""}`;
-          window.history.replaceState({}, "", newUrl);
-        });
-    }
-  }, []);
   return (
     <div className={styles.page}>
       <main>
+        {error && <ErrorState message={error} />}
+
         <section className={styles.hero}>
           <div className={styles.heroText}>
             <p className={styles.eyebrow}>Mood tracking, set to sound</p>
