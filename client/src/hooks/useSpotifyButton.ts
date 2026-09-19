@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { spotifyService } from "../services/spotify.serive";
+import { spotifyService } from "../services/spotify.service";
 import { authService } from "../services/auth.service";
 import { useAuth } from "../context/auth.context";
 

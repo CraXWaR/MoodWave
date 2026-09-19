@@ -5,13 +5,13 @@ import { CalendarIcon } from "lucide-react";
 import { useAuth } from "../../../context/auth.context";
 import { MoodCalendar } from "../../calendar/MoodCalendar";
 
-import { SpotifyButton } from "../../ui/SpotifyButton/SpotifyButton";
 
 import styles from "./Header.module.css";
 
 const navLinks = [
   { to: "/home", label: "Home", end: true },
   { to: "/check-in", label: "Check-in", end: false },
+  {to: "/profile", label: "Profile", end: false },
 ];
 
 function linkClass({ isActive }: { isActive: boolean }) {
@@ -103,8 +103,6 @@ export function Header() {
                   </div>
                 )}
               </div>
-
-              <SpotifyButton />
 
               <span className={styles.userEmail}>{user?.email}</span>
               <button type="button" className={styles.logoutButton} onClick={handleLogout}>

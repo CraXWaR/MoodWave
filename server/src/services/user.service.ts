@@ -39,6 +39,8 @@ export class UserService {
   async getById(userId: string) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new ErrorService("User not found", 404);
-    return user;
+
+    const { password, ...userWithoutPassword } = user;
+    return { ...userWithoutPassword, hashedPassword: password !== null };
   }
 }

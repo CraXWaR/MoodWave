@@ -10,6 +10,6 @@ export class MoodController {
       res.status(200).json(moods);
     } catch (err) {
       next(err);
-    }
-  };
+    };
+  }
 }

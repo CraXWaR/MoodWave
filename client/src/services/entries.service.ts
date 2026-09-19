@@ -1,5 +1,11 @@
 import { api } from "./api";
-import type { ListEntriesParams, MoodEntry, PaginatedEntries, StreakResponse } from "../types/entry.type.ts";
+import type {
+  ListEntriesParams,
+  MoodEntry,
+  PaginatedEntries,
+  StreakResponse,
+  EntryStatsResponse,
+} from "../types/entry.type.ts";
 import type { CalendarDay } from "../types/calendar.type.ts";
 
 interface CreateMoodEntryPayload {
@@ -22,4 +28,6 @@ export const entriesService = {
   getStreak: (): Promise<StreakResponse> => api.get<StreakResponse>("/entries/get-streak"),
 
   getCalendar: (): Promise<CalendarDay[]> => api.get("/entries/get-calendar"),
+
+  getStats: (): Promise<EntryStatsResponse> => api.get<EntryStatsResponse>("/entries/stats"),
 };

@@ -1,0 +1,54 @@
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+
+.band {
+  position: absolute;
+  left: 0;
+  bottom: -45%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--mood-joy),
+    var(--mood-calm),
+    var(--mood-sad),
+    var(--mood-anxious),
+    var(--mood-stressed),
+    var(--mood-burnout),
+    var(--mood-joy),
+    var(--mood-calm),
+    var(--mood-sad),
+    var(--mood-anxious),
+    var(--mood-stressed),
+    var(--mood-burnout),
+    var(--mood-joy)
+  );
+  filter: blur(40px);
+  opacity: 0.4;
+  will-change: transform;
+  animation: slide 45s linear infinite;
+}
+
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--bg-elevated) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band {
+    animation: none;
+  }
+}

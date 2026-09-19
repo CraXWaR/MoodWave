@@ -3,6 +3,8 @@ import React from "react";
 export type UserResponse = {
   id: string;
   email: string;
+  hashedPassword: boolean;
+  createdAt: string;
 };
 
 export type AuthContext = {

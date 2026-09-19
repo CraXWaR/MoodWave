@@ -6,4 +6,8 @@ export class MoodService {
       orderBy: { value: "asc" },
     });
   }
+
+  async getMoodByValue(value: number) {
+    return prisma.mood.findFirst({ where: { value } });
+  }
 }

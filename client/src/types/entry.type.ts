@@ -23,3 +23,8 @@ export type ListEntriesParams = {
 export type StreakResponse = {
   streak: number;
 };
+
+export type EntryStatsResponse = {
+  totalEntries: number;
+  topMood: { emoji: string; label: string } | null;
+};

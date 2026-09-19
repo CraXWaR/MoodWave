@@ -1,0 +1,52 @@
+.list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--text-muted, rgba(255, 255, 255, 0.6));
+}
+
+.value {
+  margin: 0;
+  font-size: 0.925rem;
+  color: var(--text, #fff);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text, #fff);
+}
+
+.badgeSpotify {
+  border-color: #1db954;
+  color: #1db954;
+}

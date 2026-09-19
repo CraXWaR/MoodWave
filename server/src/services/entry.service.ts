@@ -91,4 +91,17 @@ export class MoodEntryService {
     });
     return this.calendarService.getCalendar(entries);
   }
+
+  async countByUser(userId: string) {
+    return prisma.moodEntry.count({ where: { userId } });
+  }
+
+  async getMoodCountsSince(userId: string, since: Date) {
+    return prisma.moodEntry.groupBy({
+      by: ["mood"],
+      where: { userId, createdAt: { gte: since } },
+      _count: { mood: true },
+      _max: { createdAt: true },
+    });
+  }
 }

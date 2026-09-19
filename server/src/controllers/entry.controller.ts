@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { MoodEntryService } from "../services/entry.service.js";
 import { ErrorService } from "../utils/service-error.js";
 import { IListByUserOptions } from "../types/listByUserOptions.interface.js";
+import { MoodService } from "../services/mood.service.js";
 
 interface CreateMoodEntryBody {
   mood: number;
@@ -10,6 +11,8 @@ interface CreateMoodEntryBody {
 
 export class MoodEntryController {
   private entryService = new MoodEntryService();
+  private moodService = new MoodService();
+  private static readonly TOP_MOOD_WINDOW_DAYS = 30;
 
   create = async (req: Request<{}, {}, CreateMoodEntryBody>, res: Response, next: NextFunction) => {
     try {
@@ -62,6 +65,32 @@ export class MoodEntryController {
       const { id: userId } = req.user;
       const calendar = await this.entryService.getCalendar(userId);
       res.status(200).json(calendar);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  stats = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user!.id;
+      const windowMs = MoodEntryController.TOP_MOOD_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+      const since = new Date(Date.now() - windowMs);
+
+      const [totalEntries, recent] = await Promise.all([
+        this.entryService.countByUser(userId),
+        this.entryService.getMoodCountsSince(userId, since),
+      ]);
+
+      const top = [...recent].sort(
+        (a, b) => b._count.mood - a._count.mood || b._max.createdAt!.getTime() - a._max.createdAt!.getTime(),
+      )[0];
+
+      const moodRow = top ? await this.moodService.getMoodByValue(top.mood) : null;
+
+      res.json({
+        totalEntries,
+        topMood: moodRow ? { emoji: moodRow.emoji, label: moodRow.label } : null,
+      });
     } catch (err) {
       next(err);
     }

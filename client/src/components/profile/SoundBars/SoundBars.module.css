@@ -1,0 +1,54 @@
+.wrap {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.wave {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  animation: flow var(--d) linear infinite;
+}
+
+.front {
+  stroke-width: 2px;
+  opacity: 0.95;
+  --d: 22s;
+}
+
+.mid {
+  stroke-width: 1.5px;
+  opacity: 0.5;
+  --d: 34s;
+  animation-direction: reverse;
+}
+
+.back {
+  stroke-width: 1px;
+  opacity: 0.3;
+  --d: 48s;
+}
+
+@keyframes flow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-1200px); /* = PERIOD */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave {
+    animation: none;
+  }
+}

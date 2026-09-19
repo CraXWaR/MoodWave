@@ -8,7 +8,7 @@ import { GuestOnlyRoute } from "./components/routing/GuestOnlyRoute";
 {
   /*GuestOnlyPages*/
 }
-import GuestHomePage from "./pages/GuestHome/GuestHomePage";
+import GuestHomePage from "./pages/Guest/GuestHomePage";
 import LoginPage from "./pages/Auth/LoginPage/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
 
@@ -16,8 +16,9 @@ import RegisterPage from "./pages/Auth/RegisterPage/RegisterPage";
   /*ProtectedPages*/
 }
 import HomePage from "./pages/Home/HomePage";
-import CheckInPage from "./pages/CheckInPage/CheckInPage";
+import CheckInPage from "./pages/CheckIn/CheckInPage";
 import HistoryPage from "./pages/History/HistoryPage";
+import ProfilePage from "./pages/Profile/ProfilePage";
 
 import "./App.css";
 
@@ -38,6 +39,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/check-in" element={<CheckInPage />} />
               <Route path="/history" element={<HistoryPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
           </Route>
         </Routes>
