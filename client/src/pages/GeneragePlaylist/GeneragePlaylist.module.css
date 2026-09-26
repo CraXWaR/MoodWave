@@ -1,0 +1,259 @@
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 48px 24px 96px;
+}
+
+.column {
+  width: 100%;
+  max-width: 640px;
+}
+
+.title {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 32px;
+  max-width: 46ch;
+}
+
+.textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 16px;
+  resize: vertical;
+  transition: border-color 0.2s var(--ease-out);
+}
+
+.textarea:focus-visible {
+  border-color: var(--accent);
+}
+
+.textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  background: var(--accent);
+  color: var(--on-accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-out);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.primaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
+}
+
+.secondaryButton:hover:not(:disabled) {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+
+.secondaryButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+.rejection {
+  color: var(--warning);
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+}
+
+.danger {
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin: 12px 0 0;
+}
+
+.pulseBar {
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 24px;
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--accent) 50%,
+    var(--surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: pulseMove 1.4s var(--ease-out) infinite;
+}
+
+@keyframes pulseMove {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.resultsWrap {
+  --row-accent: var(--accent);
+}
+
+.resultsWrap[data-mood="joy"] {
+  --row-accent: var(--mood-joy);
+}
+.resultsWrap[data-mood="calm"] {
+  --row-accent: var(--mood-calm);
+}
+.resultsWrap[data-mood="sad"] {
+  --row-accent: var(--mood-sad);
+}
+.resultsWrap[data-mood="anxious"] {
+  --row-accent: var(--mood-anxious);
+}
+.resultsWrap[data-mood="stressed"] {
+  --row-accent: var(--mood-stressed);
+}
+.resultsWrap[data-mood="burnout"] {
+  --row-accent: var(--mood-burnout);
+}
+
+.resultsTitle {
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0 0 20px;
+}
+
+.trackList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.trackRow,
+.trackRowUnmatched {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.trackRowUnmatched {
+  border-bottom-style: dashed;
+  opacity: 0.6;
+}
+
+.trackPosition {
+  width: 20px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.trackImage,
+.trackImagePlaceholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: var(--surface);
+}
+
+.trackImagePlaceholder {
+  border: 1px dashed var(--border-strong);
+}
+
+.trackInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.trackTitle {
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trackArtist {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.notFoundLabel {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+.removeButton {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.15s var(--ease-out);
+}
+
+.removeButton:hover {
+  color: var(--danger);
+}
+
+.doneCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: left;
+}

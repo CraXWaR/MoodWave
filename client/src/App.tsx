@@ -21,6 +21,7 @@ import HistoryPage from "./pages/History/HistoryPage";
 import ProfilePage from "./pages/Profile/ProfilePage";
 
 import "./App.css";
+import PlaylistGeneratorPage from "./pages/GeneragePlaylist/GeneratePlaylistPage";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               <Route path="/check-in" element={<CheckInPage />} />
               <Route path="/history" element={<HistoryPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/generate-playlist" element={<PlaylistGeneratorPage />} />
             </Route>
           </Route>
         </Routes>

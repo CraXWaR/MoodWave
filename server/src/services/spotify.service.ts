@@ -1,10 +1,13 @@
 import prisma from "../db/prisma.js";
+import { TrackMatchResult } from "../types/spotify.interface.js";
 import { ErrorService } from "../utils/service-error.js";
 import { generateAuthToken } from "../utils/token.js";
 
 const SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize";
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 const SPOTIFY_ME_URL = "https://api.spotify.com/v1/me";
+const SPOTIFY_SEARCH_URL = "https://api.spotify.com/v1/search";
+const SPOTIFY_CREATE_PLAYLIST_URL = "https://api.spotify.com/v1/me/playlists";
 
 const SCOPES = ["user-read-email", "playlist-modify-public", "playlist-modify-private"].join(" ");
 
@@ -28,6 +31,12 @@ interface SpotifyProfile {
   refreshToken: string;
   expiresAt: Date;
   scope: string;
+}
+
+interface CreatedPlaylist {
+  id: string;
+  name: string;
+  externalUrl: string;
 }
 
 export class SpotifyService {
@@ -248,4 +257,69 @@ export class SpotifyService {
     const profile = await this.exchangeCodeForProfile(code);
     return this.findOrCreateSpotifyAccount(profile);
   }
+
+  async searchTrack(accessToken: string, title: string, artist: string): Promise<TrackMatchResult> {
+    const query = `${title} ${artist}`;
+    const searchParams = new URLSearchParams({
+      query,
+      type: "track",
+      limit: "1",
+    });
+
+    try {
+      const response = await fetch(`${SPOTIFY_SEARCH_URL}?${searchParams.toString()}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        console.error(`Spotify search failed for "${title}" by ${artist}:`, response.status);
+        return { matched: false, title, artist };
+      }
+
+      const data = await response.json();
+      const track = data?.tracks?.items?.[0];
+
+      if (!track) {
+        return { matched: false, title, artist };
+      }
+
+      return {
+        matched: true,
+        title: track.name,
+        artist: track.artists?.[0]?.name ?? artist,
+        spotifyUri: track.uri,
+        albumImageUrl: track.album?.images?.[0]?.url ?? null,
+      };
+    } catch (error) {
+      console.error(`Spotify search threw for "${title}" by ${artist}:`, error);
+      return { matched: false, title, artist };
+    }
+  }
+
+  createPlaylist = async (accessToken: string, name: string, description: string): Promise<CreatedPlaylist> => {
+    const response = await fetch(SPOTIFY_CREATE_PLAYLIST_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        public: false,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new ErrorService("Failed to create Spotify playlist", 502);
+    }
+
+    const data = await response.json();
+
+    return {
+      id: data.id,
+      name: data.name,
+      externalUrl: data.external_urls?.spotify ?? "",
+    };
+  };
 }
