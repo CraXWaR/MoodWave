@@ -19,7 +19,7 @@
   font-family: var(--font-body);
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--text, #fff);
+  color: var(--text-primary);
 }
 
 .description {

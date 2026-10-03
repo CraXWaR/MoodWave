@@ -28,9 +28,9 @@ export default function LoginPage() {
       const res = await authService.login(values);
       setAuthUser({
         token: res.token,
-        user: { id: res.id, email: res.email },
+        user: { id: res.id, email: res.email, hashedPassword: res.hashedPassword, createdAt: res.createdAt },
       });
-      navigate("/home");
+      navigate("/profile");
     },
   );
 

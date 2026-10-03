@@ -30,7 +30,7 @@
 .value {
   margin: 0;
   font-size: 0.925rem;
-  color: var(--text, #fff);
+  color:var(--text-primary);
   text-align: right;
   overflow-wrap: anywhere;
 }
@@ -43,7 +43,7 @@
   font-weight: 500;
   background: var(--surface);
   border: 1px solid var(--border);
-  color: var(--text, #fff);
+  color:var(--text-primary);
 }
 
 .badgeSpotify {

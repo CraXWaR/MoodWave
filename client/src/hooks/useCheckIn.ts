@@ -1,11 +1,12 @@
 import { useState } from "react";
 
 import { entriesService } from "../services/entries.service";
+import type { MoodEntry } from "../types/entry.type";
 import { invalidateCalendarCache } from "./useGetCalendar";
 import { invalidateMoodsCache } from "./useMoods";
 
 interface UseCheckInOptions {
-  onSuccess?: () => void;
+  onSuccess?: (entry: MoodEntry) => void;
 }
 
 export function useCheckIn({ onSuccess }: UseCheckInOptions = {}) {
@@ -25,7 +26,7 @@ export function useCheckIn({ onSuccess }: UseCheckInOptions = {}) {
 
     setIsSubmitting(true);
     try {
-      await entriesService.create({ mood, note: note.trim() || undefined });
+      const entry = await entriesService.create({ mood, note: note.trim() || undefined });
       setMood(null);
 
       // clear the caches so that the next fetch will get new data
@@ -33,7 +34,7 @@ export function useCheckIn({ onSuccess }: UseCheckInOptions = {}) {
       invalidateMoodsCache();
 
       setNote("");
-      onSuccess?.();
+      onSuccess?.(entry);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
     } finally {

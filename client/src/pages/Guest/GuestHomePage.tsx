@@ -37,8 +37,6 @@ export default function GuestHomePage() {
           <WaveForm variant="hero" />
         </section>
 
-        {/* <WaveForm variant="divider" /> */}
-
         <section className={styles.howItWorks}>
           <div className={`${styles.card} ${styles.railCalm}`}>
             <p className={styles.cardLabel}>Check in</p>

@@ -2,7 +2,7 @@ interface IStreakEntry {
   createdAt: Date;
 }
 
-export interface IStreakService {
+interface IStreakService {
   calculateStreak(entries: IStreakEntry[]): number;
 }
 

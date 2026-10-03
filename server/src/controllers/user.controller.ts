@@ -20,7 +20,6 @@ export class UserController {
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });
       }
-      console.log(parsed);
       res.status(500).json({ error: "Something went wrong" });
     }
   };
@@ -34,7 +33,13 @@ export class UserController {
     try {
       const { email, password } = parsed.data;
       const { user, token } = await this.userService.login(email, password);
-      res.json({ id: user.id, email: user.email, token });
+      res.json({
+        id: user.id,
+        email: user.email,
+        createdAt: user.createdAt,
+        hashedPassword: user.password !== null,
+        token,
+      });
     } catch (err) {
       if (err instanceof ErrorService) {
         return res.status(err.statusCode).json({ error: err.message });

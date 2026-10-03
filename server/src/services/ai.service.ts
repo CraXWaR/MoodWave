@@ -50,7 +50,6 @@ export class AiService {
       });
 
       const raw = completion.choices[0]?.message?.content?.trim().toLowerCase();
-      console.log("Full message:", JSON.stringify(completion.choices[0]?.message, null, 2));
       if (!raw || !this.isValidToken(raw)) return null;
 
       return raw;

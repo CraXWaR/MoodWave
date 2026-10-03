@@ -32,30 +32,5 @@
   font-family: var(--font-body);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text, #fff);
-}
-
-.status {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.82rem;
-  color: var(--text-muted, rgba(255, 255, 255, 0.6));
-}
-
-.dotOn,
-.dotOff {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.dotOn {
-  background: #1db954;
-  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.25);
-}
-
-.dotOff {
-  background: var(--text-muted, rgba(255, 255, 255, 0.4));
+  color: var(--text-primary);
 }

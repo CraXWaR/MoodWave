@@ -37,6 +37,7 @@ export function useEntryHistory() {
 
   const hasMore = entries.length < total;
   const loadMore = () => fetchPage(offset + PAGE_SIZE);
+  const refetch = useCallback(() => fetchPage(0), [fetchPage]);
 
-  return { entries, total, loading, error, hasMore, loadMore, refetch: () => fetchPage(0) };
+  return { entries, total, loading, error, hasMore, loadMore, refetch };
 }

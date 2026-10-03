@@ -7,7 +7,7 @@ interface HistoryHeaderProps {
 export function HistoryHeader({ total }: HistoryHeaderProps) {
   return (
     <header className={styles.header}>
-      <h1>Your history</h1>
+      <h2>Your history</h2>
       <span className={styles.count}>
         {total} {total === 1 ? 'entry' : 'entries'}
       </span>

@@ -20,6 +20,8 @@ export type AuthContext = {
 export type LoginResponse = {
   id: string;
   email: string;
+  hashedPassword: boolean;
+  createdAt: string;
   token: string;
 };
 

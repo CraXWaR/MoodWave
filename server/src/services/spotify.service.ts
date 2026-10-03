@@ -8,6 +8,7 @@ const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 const SPOTIFY_ME_URL = "https://api.spotify.com/v1/me";
 const SPOTIFY_SEARCH_URL = "https://api.spotify.com/v1/search";
 const SPOTIFY_CREATE_PLAYLIST_URL = "https://api.spotify.com/v1/me/playlists";
+const SPOTIFY_PLAYLISTS_URL = "https://api.spotify.com/v1/playlists";
 
 const SCOPES = ["user-read-email", "playlist-modify-public", "playlist-modify-private"].join(" ");
 
@@ -261,7 +262,7 @@ export class SpotifyService {
   async searchTrack(accessToken: string, title: string, artist: string): Promise<TrackMatchResult> {
     const query = `${title} ${artist}`;
     const searchParams = new URLSearchParams({
-      query,
+      q: query,
       type: "track",
       limit: "1",
     });
@@ -296,7 +297,7 @@ export class SpotifyService {
     }
   }
 
-  createPlaylist = async (accessToken: string, name: string, description: string): Promise<CreatedPlaylist> => {
+  async createPlaylist(accessToken: string, name: string, description: string): Promise<CreatedPlaylist> {
     const response = await fetch(SPOTIFY_CREATE_PLAYLIST_URL, {
       method: "POST",
       headers: {
@@ -321,5 +322,21 @@ export class SpotifyService {
       name: data.name,
       externalUrl: data.external_urls?.spotify ?? "",
     };
-  };
+  }
+
+  async addTracksToPlaylist(accessToken: string, playlistId: string, uris: string[]): Promise<void> {
+    // ponytail: single request; Spotify caps it at 100 URIs and generation returns at most 10
+    const response = await fetch(`${SPOTIFY_PLAYLISTS_URL}/${playlistId}/items`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ uris }),
+    });
+
+    if (!response.ok) {
+      throw new ErrorService("Failed to add tracks to Spotify playlist", 502);
+    }
+  }
 }

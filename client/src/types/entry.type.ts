@@ -24,6 +24,8 @@ export type StreakResponse = {
   streak: number;
 };
 
+export type SensedStatus = "idle" | "reading" | "sensed" | "unclear";
+
 export type EntryStatsResponse = {
   totalEntries: number;
   topMood: { emoji: string; label: string } | null;

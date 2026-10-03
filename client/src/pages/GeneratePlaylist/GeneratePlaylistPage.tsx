@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { usePlaylistGenerator } from "../../hooks/usePlaylistGenerator";
 import { useGetCalendar } from "../../hooks/useGetCalendar";
-import styles from "./GeneragePlaylist.module.css";
 import type { TrackMatchResult } from "../../types/playlist.type";
+import styles from "./GeneratePlaylist.module.css";
 
 const MOOD_STYLE_BY_VALUE: Record<number, string> = {
   1: "stressed",
@@ -60,7 +60,17 @@ export default function PlaylistGeneratorPage() {
 
   const handleMoodGenerate = () => {
     if (todaysMood === null) return;
+    setPromptInput("");
     generateFromMood(todaysMood);
+  };
+
+  const handleRegenerate = () => {
+    const trimmedPrompt = promptInput.trim();
+    if (trimmedPrompt) {
+      generateFromPrompt(trimmedPrompt);
+      return;
+    }
+    regenerate();
   };
 
   return (
@@ -114,6 +124,15 @@ export default function PlaylistGeneratorPage() {
           <div className={styles.resultsWrap} data-mood={nearestMoodToken ?? undefined}>
             <h2 className={styles.resultsTitle}>Your songs</h2>
 
+            <textarea
+              className={`${styles.textarea} ${styles.resultsPrompt}`}
+              placeholder="Describe a mood to steer the next batch"
+              value={promptInput}
+              onChange={(event) => setPromptInput(event.target.value)}
+              rows={4}
+              disabled={isCreating}
+            />
+
             <ol className={styles.trackList}>
               {tracks.map((track, index) => {
                 if (removedIndexes.has(index)) return null;
@@ -131,7 +150,7 @@ export default function PlaylistGeneratorPage() {
             {error && <p className={styles.danger}>{error}</p>}
 
             <div className={styles.actions}>
-              <button className={styles.secondaryButton} onClick={regenerate} disabled={isCreating}>
+              <button className={styles.secondaryButton} onClick={handleRegenerate} disabled={isCreating}>
                 Regenerate
               </button>
               <button

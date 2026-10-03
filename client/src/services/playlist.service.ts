@@ -10,8 +10,8 @@ export const playlistService = {
   generateFromPrompt: (prompt: string): Promise<GenerateResult> =>
     api.post<GenerateResult>("/spotify/playlist/generate/prompt", { prompt }),
 
-  generateFromMood: (prompt: number): Promise<GenerateResult> =>
-    api.post<GenerateResult>("/spotify/playlist/generate/mood", { prompt }),
+  generateFromMood: (moodValue: number): Promise<GenerateResult> =>
+    api.post<GenerateResult>("/spotify/playlist/generate/mood", { moodValue }),
 
   createPlaylist: (prompt: CreatePlaylistPayload): Promise<CreatedPlaylist> =>
     api.post<CreatedPlaylist>("/spotify/playlist/create", prompt),

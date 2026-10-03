@@ -53,10 +53,3 @@
   height: 18px;
   flex-shrink: 0;
 }
-
-.error {
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  color: var(--danger);
-  margin: 0;
-}

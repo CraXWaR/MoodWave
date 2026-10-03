@@ -9,9 +9,7 @@ import { MoodCalendar } from "../../calendar/MoodCalendar";
 import styles from "./Header.module.css";
 
 const navLinks = [
-  { to: "/home", label: "Home", end: true },
-  { to: "/check-in", label: "Check-in", end: false },
-  {to: "/profile", label: "Profile", end: false },
+  { to: "/profile", label: "Profile", end: false },
   {to: "/generate-playlist", label: "Generate Playlist", end: false },
 ];
 

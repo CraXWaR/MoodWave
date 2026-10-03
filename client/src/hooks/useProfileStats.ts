@@ -7,8 +7,8 @@ interface ProfileStatsData extends EntryStatsResponse {
   streak: number;
 }
 
-export function useProfileStats() {
-  const { streak, isLoading: streakLoading, error: streakError } = useStreak();
+export function useProfileStats(refreshKey = 0) {
+  const { streak, isLoading: streakLoading, error: streakError } = useStreak(refreshKey);
   const [entryStats, setEntryStats] = useState<EntryStatsResponse | null>(null);
   const [statsLoading, setStatsLoading] = useState(true);
   const [statsError, setStatsError] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export function useProfileStats() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [refreshKey]);
 
   const stats: ProfileStatsData | null = entryStats && streak !== null ? { ...entryStats, streak } : null;
 

@@ -1,5 +1,6 @@
 import { useCheckIn } from "../../../hooks/useCheckIn";
 import type { Mood } from "../../../types/mood.type";
+import type { MoodEntry } from "../../../types/entry.type";
 
 import { MoodPicker } from "../MoodPicker/MoodPicker";
 import { NoteInput } from "../NoteInput/NoteInput";
@@ -9,7 +10,7 @@ import styles from "./CheckInForm.module.css";
 
 interface CheckInFormProps {
   moods: Mood[];
-  onSuccess?: () => void;
+  onSuccess?: (entry: MoodEntry) => void;
   title?: string;
 }
 
@@ -18,7 +19,7 @@ export function CheckInForm({moods, onSuccess, title = "How are you feeling?" }:
 
   return (
     <div className={styles.wrapper}>
-      <h1>{title}</h1>
+      <h2>{title}</h2>
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <MoodPicker moods={moods} value={mood} onChange={setMood} />

@@ -6,10 +6,6 @@ import { signSpotifyState, verifySpotifyState } from "../utils/spotify-state.js"
 import { AiService } from "../services/ai.service.js";
 import { SongSuggestion, TrackMatchResult } from "../types/spotify.interface.js";
 
-interface SpotifyStatePayload {
-  userId: string;
-}
-
 export class SpotifyController {
   private spotifyService = new SpotifyService();
   private aiService = new AiService();
@@ -62,7 +58,6 @@ export class SpotifyController {
       await this.spotifyService.handleCallback(decoded.userId, code);
       res.redirect(`${process.env.FRONTEND_URL}/?spotify_connected=true`);
     } catch (err) {
-      console.log(err);
       res.redirect(`${process.env.FRONTEND_URL}/?spotify_error=connection_failed`);
     }
   };
@@ -163,6 +158,7 @@ export class SpotifyController {
 
       const accessToken = await this.spotifyService.getValidAccessToken(req.user!.id);
       const playlist = await this.spotifyService.createPlaylist(accessToken, name, description);
+      await this.spotifyService.addTracksToPlaylist(accessToken, playlist.id, uris);
 
       res.json(playlist);
     } catch (err) {
