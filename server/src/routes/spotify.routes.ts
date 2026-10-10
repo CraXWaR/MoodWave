@@ -13,5 +13,6 @@ router.get("/login-with-spotify", spotifyController.loginWithSpotify);
 router.post("/playlist/generate/prompt", authenticate, spotifyController.generateFromPrompt);
 router.post("/playlist/generate/mood", authenticate, spotifyController.generateFromMood);
 router.post("/playlist/create", authenticate, spotifyController.createPlaylist);
+router.post("/playlist/:playlistId/tracks", authenticate, spotifyController.addTracksToPlaylist);
 
 export default router;

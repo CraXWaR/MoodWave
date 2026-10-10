@@ -4,6 +4,18 @@ type RequestOptions = Omit<RequestInit, "body" | "method"> & {
   body?: unknown;
 };
 
+// Keeps the status and the parsed error body so callers can read extra fields the server sent
+export class ApiError extends Error {
+  status: number;
+  data: unknown;
+
+  constructor(message: string, status: number, data: unknown) {
+    super(message);
+    this.status = status;
+    this.data = data;
+  }
+}
+
 async function request<TResponse>(
   method: string,
   path: string,
@@ -33,7 +45,7 @@ async function request<TResponse>(
   }
 
   if (!res.ok) {
-    throw new Error(data?.error ?? "Something went wrong. Try again.");
+    throw new ApiError(data?.error ?? "Something went wrong. Try again.", res.status, data);
   }
 
   return data as TResponse;

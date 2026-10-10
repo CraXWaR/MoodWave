@@ -6,16 +6,22 @@ import { useAuth } from "../context/auth.context";
 type ConnectionStatus = "checking" | "connected" | "disconnected";
 
 // Handles the redirect back from Spotify after the login flow completes —
-// reads the token from the URL, fetches the user, logs them in, cleans the URL.
+// reads the token from the URL fragment, cleans the URL, fetches the user, logs them in.
 function useLoginRedirectEffect(
   setAuthUser: ReturnType<typeof useAuth>["setAuthUser"],
   setError: (error: string | null) => void,
 ) {
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const spotifyLoginToken = params.get("spotify_login_token");
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const spotifyLoginToken = hashParams.get("spotify_login_token");
 
     if (!spotifyLoginToken) return;
+
+    // remove the token from the address bar right away, before the network call
+    hashParams.delete("spotify_login_token");
+    const remainingHash = hashParams.toString();
+    const cleanUrl = `${window.location.pathname}${window.location.search}${remainingHash ? `#${remainingHash}` : ""}`;
+    window.history.replaceState({}, "", cleanUrl);
 
     authService
       .getMe(spotifyLoginToken)
@@ -25,11 +31,6 @@ function useLoginRedirectEffect(
       .catch((err) => {
         console.error("Spotify login redirect failed", err);
         setError("Couldn't complete Spotify login. Try again.");
-      })
-      .finally(() => {
-        params.delete("spotify_login_token");
-        const newUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ""}`;
-        window.history.replaceState({}, "", newUrl);
       });
   }, []);
 }

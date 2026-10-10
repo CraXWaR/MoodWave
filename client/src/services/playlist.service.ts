@@ -15,4 +15,7 @@ export const playlistService = {
 
   createPlaylist: (prompt: CreatePlaylistPayload): Promise<CreatedPlaylist> =>
     api.post<CreatedPlaylist>("/spotify/playlist/create", prompt),
+
+  addTracksToPlaylist: (playlistId: string, uris: string[]): Promise<void> =>
+    api.post<void>(`/spotify/playlist/${playlistId}/tracks`, { uris }),
 };

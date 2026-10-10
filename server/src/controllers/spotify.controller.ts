@@ -51,8 +51,9 @@ export class SpotifyController {
       const decoded = verifySpotifyState(state);
 
       if (decoded.flow === "login") {
-        const { user, token } = await this.spotifyService.loginWithSpotify(code);
-        return res.redirect(`${process.env.FRONTEND_URL}/?spotify_login_token=${token}`);
+        const { token } = await this.spotifyService.loginWithSpotify(code);
+        // fragment, not query: browsers never send it to servers or in the Referer header
+        return res.redirect(`${process.env.FRONTEND_URL}/#spotify_login_token=${token}`);
       }
 
       await this.spotifyService.handleCallback(decoded.userId, code);
@@ -158,7 +159,17 @@ export class SpotifyController {
 
       const accessToken = await this.spotifyService.getValidAccessToken(req.user.id);
       const playlist = await this.spotifyService.createPlaylist(accessToken, name, description);
-      await this.spotifyService.addTracksToPlaylist(accessToken, playlist.id, uris);
+
+      try {
+        await this.addTracksWithRetry(accessToken, playlist.id, uris);
+      } catch {
+        // the playlist exists but is empty: hand it back so the client resumes into it
+        // through addTracksToPlaylist instead of creating a duplicate
+        return res.status(502).json({
+          error: "Your playlist was created, but the songs couldn't be added. Try saving again.",
+          playlist,
+        });
+      }
 
       res.json(playlist);
     } catch (err) {
@@ -166,6 +177,48 @@ export class SpotifyController {
         return res.status(err.statusCode).json({ error: err.message });
       }
       res.status(500).json({ error: "Something went wrong" });
+    }
+  };
+
+  addTracksToPlaylist = async (req: Request<{ playlistId: string }>, res: Response) => {
+    try {
+      const { playlistId } = req.params;
+      const { uris } = req.body;
+
+      // the id ends up in a Spotify URL path, so only allow Spotify's base62 ids
+      if (!/^[A-Za-z0-9]+$/.test(playlistId)) {
+        throw new ErrorService("Invalid playlist id", 400);
+      }
+
+      if (!Array.isArray(uris) || uris.length === 0) {
+        throw new ErrorService("At least one track URI is required", 400);
+      }
+
+      const accessToken = await this.spotifyService.getValidAccessToken(req.user.id);
+      await this.addTracksWithRetry(accessToken, playlistId, uris);
+
+      res.status(204).send();
+    } catch (err) {
+      if (err instanceof ErrorService) {
+        return res.status(err.statusCode).json({ error: err.message });
+      }
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  };
+
+  // Spotify sometimes fails transiently (429 / 5xx), so try a few times with a growing pause
+  private addTracksWithRetry = async (accessToken: string, playlistId: string, uris: string[]): Promise<void> => {
+    const MAX_ATTEMPTS = 3;
+    const RETRY_DELAY_MS = 500;
+
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await this.spotifyService.addTracksToPlaylist(accessToken, playlistId, uris);
+        return;
+      } catch (err) {
+        if (attempt >= MAX_ATTEMPTS) throw err;
+        await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * attempt));
+      }
     }
   };
 

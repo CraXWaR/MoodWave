@@ -1,9 +1,21 @@
 import { useState } from "react";
+import { ApiError } from "../services/api";
 import { playlistService } from "../services/playlist.service";
 import type { CreatedPlaylist, GenerateResult, TrackMatchResult } from "../types/playlist.type";
 
 type GeneratePhase = "idle" | "generating" | "results" | "creating" | "done";
 type LastSource = { type: "prompt"; value: string } | { type: "mood"; value: number }; // ADD THIS
+
+interface CreatePlaylistErrorBody {
+  playlist?: CreatedPlaylist;
+}
+
+// When the playlist was created but its songs couldn't be added, the server sends the playlist back
+function getHalfCreatedPlaylist(err: unknown): CreatedPlaylist | null {
+  if (!(err instanceof ApiError)) return null;
+  const errorBody = err.data as CreatePlaylistErrorBody | null;
+  return errorBody?.playlist ?? null;
+}
 
 export function usePlaylistGenerator() {
   const [phase, setPhase] = useState<GeneratePhase>("idle");
@@ -14,6 +26,8 @@ export function usePlaylistGenerator() {
   const [sourceText, setSourceText] = useState<string>("");
   const [lastSource, setLastSource] = useState<LastSource | null>(null);
   const [createdPlaylist, setCreatedPlaylist] = useState<CreatedPlaylist | null>(null);
+  // an empty playlist already on Spotify; the next save adds to it instead of creating a duplicate
+  const [pendingPlaylist, setPendingPlaylist] = useState<CreatedPlaylist | null>(null);
 
   const handleResult = (result: GenerateResult, promptUsedForNaming: string) => {
     if (result.rejected) {
@@ -24,6 +38,8 @@ export function usePlaylistGenerator() {
 
     setTracks(result.tracks);
     setRemovedIndexes(new Set());
+    // a new batch gets a new name, so don't resume into the playlist named after the old one
+    setPendingPlaylist(null);
     setSourceText(promptUsedForNaming);
     setRejectionMessage(null);
     setPhase("results");
@@ -85,13 +101,21 @@ export function usePlaylistGenerator() {
     setError(null);
 
     try {
-      const playlist = await playlistService.createPlaylist({
-        uris: urisToSave,
-        sourceText,
-      });
-      setCreatedPlaylist(playlist);
+      if (pendingPlaylist) {
+        await playlistService.addTracksToPlaylist(pendingPlaylist.id, urisToSave);
+        setCreatedPlaylist(pendingPlaylist);
+      } else {
+        const playlist = await playlistService.createPlaylist({
+          uris: urisToSave,
+          sourceText,
+        });
+        setCreatedPlaylist(playlist);
+      }
+      setPendingPlaylist(null);
       setPhase("done");
     } catch (err) {
+      const halfCreatedPlaylist = getHalfCreatedPlaylist(err);
+      if (halfCreatedPlaylist) setPendingPlaylist(halfCreatedPlaylist);
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setPhase("results");
     }
@@ -106,6 +130,7 @@ export function usePlaylistGenerator() {
     setSourceText("");
     setLastSource(null);
     setCreatedPlaylist(null);
+    setPendingPlaylist(null);
   };
 
   return {
