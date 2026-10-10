@@ -10,13 +10,13 @@ export function groupByDay(entries: MoodEntry[]) {
   return Array.from(groups.entries());
 }
 
-export function formatDayHeading(dateStr: string) {
-  const date = new Date(dateStr);
+export function formatDayHeading(dateString: string) {
+  const date = new Date(dateString);
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
 
-  const isSameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+  const isSameDay = (firstDate: Date, secondDate: Date) => firstDate.toDateString() === secondDate.toDateString();
 
   if (isSameDay(date, today)) return 'Today';
   if (isSameDay(date, yesterday)) return 'Yesterday';

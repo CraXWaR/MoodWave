@@ -50,7 +50,7 @@ export class UserController {
 
   getMe = async (req: Request, res: Response) => {
     try {
-      const user = await this.userService.getById(req.user!.id);
+      const user = await this.userService.getById(req.user.id);
       res.json(user);
     } catch (err) {
       if (err instanceof ErrorService) {

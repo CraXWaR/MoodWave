@@ -27,7 +27,7 @@ export class CalendarService {
         mood: Math.round((total / count) * 10) / 10,
         count,
       }))
-      .sort((a, b) => a.date.localeCompare(b.date));
+      .sort((firstDay, secondDay) => firstDay.date.localeCompare(secondDay.date));
   }
 
   private toDayKey(date: Date): string {

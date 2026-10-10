@@ -9,7 +9,12 @@ app.use(express.json());
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || origin === "http://localhost:5173" || /\.devtunnels\.ms$/.test(origin)) {
+      if (
+        !origin ||
+        origin === "http://localhost:5173" ||
+        origin === process.env.FRONTEND_URL ||
+        /\.devtunnels\.ms$/.test(origin)
+      ) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));

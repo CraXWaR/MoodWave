@@ -124,6 +124,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+.vscode
 
 # pnpm
 .pnpm-store
@@ -145,8 +146,9 @@ vite.config.ts.timestamp-*
 # Build output
 dist/
 build/
-prisma/generated/
+**/prisma/generated/
 
 # Claude generated files
 CLAUDE-OUTPUT/
 docs
+CLAUDE.md

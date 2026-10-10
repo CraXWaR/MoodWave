@@ -15,8 +15,8 @@ export class StreakCalculation implements IStreakService {
   calculateStreak(entries: IStreakEntry[]): number {
     if (entries.length === 0) return 0;
 
-    const uniqueDays = Array.from(new Set(entries.map((e) => StreakCalculation.toDayKey(e.createdAt)))).sort((a, b) =>
-      a < b ? 1 : -1,
+    const uniqueDays = Array.from(new Set(entries.map((entry) => StreakCalculation.toDayKey(entry.createdAt)))).sort(
+      (firstDay, secondDay) => (firstDay < secondDay ? 1 : -1),
     );
 
     const mostRecent = uniqueDays[0];

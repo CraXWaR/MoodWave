@@ -3,12 +3,14 @@ type WithToken = { token: string };
 const PREFERRED_ORDER = ["joy", "calm", "sad", "anxious", "stressed", "burnout"];
 
 const rank = (token: string) => {
-  const i = PREFERRED_ORDER.indexOf(token);
-  return i === -1 ? PREFERRED_ORDER.length : i;
+  const orderIndex = PREFERRED_ORDER.indexOf(token);
+  return orderIndex === -1 ? PREFERRED_ORDER.length : orderIndex;
 };
 
 export function toSpectrum(moods: WithToken[]): string[] {
-  return [...moods].sort((a, b) => rank(a.token) - rank(b.token)).map((m) => m.token);
+  return [...moods]
+    .sort((firstMood, secondMood) => rank(firstMood.token) - rank(secondMood.token))
+    .map((mood) => mood.token);
 }
 
 export function loopSpectrum(tokens: string[]): string[] {
@@ -16,6 +18,6 @@ export function loopSpectrum(tokens: string[]): string[] {
 }
 
 export function buildSpectrumGradient(tokens: string[]): string {
-  const stops = loopSpectrum(tokens).map((t) => `var(--mood-${t})`);
+  const stops = loopSpectrum(tokens).map((token) => `var(--mood-${token})`);
   return `linear-gradient(90deg, ${stops.join(", ")})`;
 }

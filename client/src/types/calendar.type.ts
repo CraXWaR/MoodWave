@@ -1,5 +1,5 @@
 export type CalendarDay = {
   date: string;
-  mood: number | null;
+  mood: number;
   count: number;
 };

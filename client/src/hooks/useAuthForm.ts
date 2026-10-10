@@ -13,7 +13,7 @@ export function useAuthForm<T extends Record<string, string>>(
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const allErrors = [...Object.values(errors), serverError].filter(
-    (msg): msg is string => Boolean(msg),
+    (message): message is string => Boolean(message),
   );
 
   const handleChange =
