@@ -229,16 +229,23 @@ export class SpotifyService {
       where: { email: spotifyProfile.email },
     });
 
+    // Never link by email: anyone can register a Spotify account with someone else's address,
+    // so linking only happens through the logged-in connect flow.
+    if (existingUserByEmail) {
+      throw new ErrorService(
+        "An account with this email already exists. Log in with your password, then connect Spotify from your profile.",
+        409,
+      );
+    }
+
     const user = await prisma.$transaction(async (tx) => {
-      const targetUser =
-        existingUserByEmail ??
-        (await tx.user.create({
-          data: { email: spotifyProfile.email, password: null },
-        }));
+      const newUser = await tx.user.create({
+        data: { email: spotifyProfile.email, password: null },
+      });
 
       await tx.spotifyAccount.create({
         data: {
-          userId: targetUser.id,
+          userId: newUser.id,
           spotifyId: spotifyProfile.id,
           accessToken: spotifyProfile.accessToken,
           refreshToken: spotifyProfile.refreshToken,
@@ -247,7 +254,7 @@ export class SpotifyService {
         },
       });
 
-      return targetUser;
+      return newUser;
     });
 
     const token = generateAuthToken(user.id);

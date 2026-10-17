@@ -6,6 +6,8 @@ import { signSpotifyState, verifySpotifyState } from "../utils/spotify-state.js"
 import { AiService } from "../services/ai.service.js";
 import { SongSuggestion, TrackMatchResult } from "../types/spotify.interface.js";
 
+type SpotifyState = ReturnType<typeof verifySpotifyState>;
+
 export class SpotifyController {
   private spotifyService = new SpotifyService();
   private aiService = new AiService();
@@ -37,30 +39,57 @@ export class SpotifyController {
   };
 
   callback = async (req: Request, res: Response) => {
+    // decoded up front so every outcome, errors included, returns the user to the page the flow started on
+    const decodedState = this.decodeStateSafely(req.query.state);
+    const returnUrl = this.getCallbackReturnUrl(decodedState);
+
     if (req.query.error) {
-      return res.redirect(`${process.env.FRONTEND_URL}/settings?spotify_error=access_denied`);
+      return res.redirect(`${returnUrl}?spotify_error=access_denied`);
     }
 
     const parsed = spotifyCallbackSchema.safeParse(req.query);
     if (!parsed.success) {
-      return res.redirect(`${process.env.FRONTEND_URL}/settings?spotify_error=invalid_callback`);
+      return res.redirect(`${returnUrl}?spotify_error=invalid_callback`);
+    }
+
+    if (!decodedState) {
+      return res.redirect(`${returnUrl}?spotify_error=invalid_state`);
     }
 
     try {
-      const { code, state } = parsed.data;
-      const decoded = verifySpotifyState(state);
+      const { code } = parsed.data;
 
-      if (decoded.flow === "login") {
+      if (decodedState.flow === "login") {
         const { token } = await this.spotifyService.loginWithSpotify(code);
         // fragment, not query: browsers never send it to servers or in the Referer header
         return res.redirect(`${process.env.FRONTEND_URL}/#spotify_login_token=${token}`);
       }
 
-      await this.spotifyService.handleCallback(decoded.userId, code);
-      res.redirect(`${process.env.FRONTEND_URL}/?spotify_connected=true`);
+      await this.spotifyService.handleCallback(decodedState.userId, code);
+      res.redirect(`${returnUrl}?spotify_connected=true`);
     } catch (err) {
-      res.redirect(`${process.env.FRONTEND_URL}/?spotify_error=connection_failed`);
+      // 409 means a conflicting account: in login, the email is taken; in connect, the Spotify account is
+      const isConflict = err instanceof ErrorService && err.statusCode === 409;
+      const conflictCode = decodedState.flow === "login" ? "email_in_use" : "already_linked";
+      res.redirect(`${returnUrl}?spotify_error=${isConflict ? conflictCode : "connection_failed"}`);
     }
+  };
+
+  // a forged, expired or missing state decodes to null instead of throwing
+  private decodeStateSafely = (state: unknown): SpotifyState | null => {
+    if (typeof state !== "string" || state.length === 0) return null;
+
+    try {
+      return verifySpotifyState(state);
+    } catch {
+      return null;
+    }
+  };
+
+  private getCallbackReturnUrl = (decodedState: SpotifyState | null): string => {
+    if (decodedState?.flow === "connect") return `${process.env.FRONTEND_URL}/profile`;
+    if (decodedState?.flow === "login") return `${process.env.FRONTEND_URL}/login`;
+    return `${process.env.FRONTEND_URL}/`;
   };
 
   getStatus = async (req: Request, res: Response) => {
@@ -229,10 +258,45 @@ export class SpotifyController {
       return aiResult;
     }
 
+    const songs = this.pickPlaylistSongs(aiResult.songs, aiResult.avoidArtists);
+    if (songs.length === 0) {
+      throw new ErrorService("Couldn't find songs that fit, try rephrasing your prompt", 502);
+    }
+
     const accessToken = await this.spotifyService.getValidAccessToken(userId);
-    const tracks = await this.batchSearchTracks(accessToken, aiResult.songs);
+    const tracks = await this.batchSearchTracks(accessToken, songs);
 
     return { rejected: false, tracks };
+  };
+
+  // Enforces in code what the prompt only asks for: no excluded artists, at most 2 songs per artist, 10 songs
+  private pickPlaylistSongs = (songs: SongSuggestion[], avoidArtists: string[]): SongSuggestion[] => {
+    const PLAYLIST_SIZE = 10;
+    const MAX_SONGS_PER_ARTIST = 2;
+
+    // whole-word, case-insensitive: "metallica" also catches "Metallica & San Francisco Symphony"
+    const avoidPatterns = avoidArtists.map((artist) => {
+      const escapedArtist = artist.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      // lookarounds instead of \b, which never matches next to punctuation like "Sunn O)))"
+      return new RegExp(`(?<!\\w)${escapedArtist}(?!\\w)`, "i");
+    });
+
+    const songCountByArtist = new Map<string, number>();
+    const pickedSongs: SongSuggestion[] = [];
+
+    for (const song of songs) {
+      if (pickedSongs.length === PLAYLIST_SIZE) break;
+      if (avoidPatterns.some((pattern) => pattern.test(song.artist))) continue;
+
+      const artistKey = song.artist.trim().toLowerCase();
+      const artistSongCount = songCountByArtist.get(artistKey) ?? 0;
+      if (artistSongCount >= MAX_SONGS_PER_ARTIST) continue;
+
+      songCountByArtist.set(artistKey, artistSongCount + 1);
+      pickedSongs.push(song);
+    }
+
+    return pickedSongs;
   };
 
   private batchSearchTracks = async (accessToken: string, songs: SongSuggestion[]): Promise<TrackMatchResult[]> => {

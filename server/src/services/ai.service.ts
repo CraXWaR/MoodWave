@@ -10,10 +10,21 @@ Given a short journal note, respond with exactly one of these tokens: stressed, 
 If the note is empty, unclear, or doesn't express an emotion, respond with: none.
 Respond with the token only. No punctuation, no explanation, no extra words.`;
 
+// More than the 10 a playlist gets, so the controller can drop excluded or repeated artists and still fill it
+const SUGGESTION_COUNT = 15;
+
 const SONG_SYSTEM_PROMPT = `You are a music recommendation assistant for a mood-tracking app.
-Given a prompt describing a mood or feeling, respond with exactly 10 real songs that fit.
+Given a prompt describing a mood or feeling, suggest exactly ${SUGGESTION_COUNT} real, existing songs that fit it.
+
+Rules:
+- If the user says they don't want certain artists or songs, never include them, and list every artist they want to avoid in "avoidArtists".
+- Use at most 2 songs per artist.
+- Mix well-known and lesser-known tracks. Don't default to the single most famous song of a genre.
+- Spell artist names the way they appear on streaming services.
+
 Respond ONLY with valid JSON in this exact shape:
-{ "songs": [ { "title": "...", "artist": "..." }, ... ] }
+{ "songs": [ { "title": "...", "artist": "..." }, ... ], "avoidArtists": [ "..." ] }
+Use an empty array for "avoidArtists" when the user didn't exclude anyone.
 
 If the prompt is not about a mood, feeling, or does not give enough to base a music suggestion on, respond ONLY with:
 { "rejected": true, "message": "I can't find any songs for that — try describing a mood or feeling." }
@@ -27,6 +38,7 @@ interface RejectedSongSuggestion {
 interface AcceptedSongSuggestion {
   rejected: false;
   songs: SongSuggestion[];
+  avoidArtists: string[];
 }
 
 type GenerateSongsResult = AcceptedSongSuggestion | RejectedSongSuggestion;
@@ -78,7 +90,8 @@ export class AiService {
           { role: "user", content: prompt },
         ],
         temperature: 0.7,
-        max_tokens: 500,
+        // includes the model's hidden reasoning tokens, so leave room for 15 songs of JSON after it
+        max_tokens: 1200,
         reasoning_effort: "low",
         response_format: { type: "json_object" },
       });
@@ -111,12 +124,16 @@ export class AiService {
 
     const songs: SongSuggestion[] = parsed.songs
       .filter((song: any) => typeof song?.title === "string" && typeof song?.artist === "string")
-      .slice(0, 10);
+      .slice(0, SUGGESTION_COUNT);
 
     if (songs.length === 0) {
       throw new ErrorService("Failed to generate songs, please try again", 502);
     }
 
-    return { rejected: false, songs };
+    const avoidArtists: string[] = Array.isArray(parsed.avoidArtists)
+      ? parsed.avoidArtists.filter((artist: unknown) => typeof artist === "string" && artist.trim().length > 0)
+      : [];
+
+    return { rejected: false, songs, avoidArtists };
   }
 }

@@ -64,7 +64,7 @@ function errorResponse(status: number) {
 }
 
 function decodeUserId(token: string) {
-  const payload = jwt.verify(token, "test-jwt-secret") as { id: string };
+  const payload = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
   return payload.id;
 }
 
@@ -98,9 +98,9 @@ describe("SpotifyService", () => {
       const authUrl = new URL(spotifyService.getAuthUrl("signed-state"));
 
       expect(`${authUrl.origin}${authUrl.pathname}`).toBe("https://accounts.spotify.com/authorize");
-      expect(authUrl.searchParams.get("client_id")).toBe("test-spotify-client-id");
+      expect(authUrl.searchParams.get("client_id")).toBe(process.env.SPOTIFY_CLIENT_ID);
       expect(authUrl.searchParams.get("response_type")).toBe("code");
-      expect(authUrl.searchParams.get("redirect_uri")).toBe("http://localhost:3000/api/spotify/callback");
+      expect(authUrl.searchParams.get("redirect_uri")).toBe(process.env.SPOTIFY_REDIRECT_URI);
       expect(authUrl.searchParams.get("scope")).toBe("user-read-email playlist-modify-public playlist-modify-private");
       expect(authUrl.searchParams.get("state")).toBe("signed-state");
       expect(authUrl.searchParams.get("show_dialog")).toBe("true");
@@ -144,7 +144,9 @@ describe("SpotifyService", () => {
       const requestBody = new URLSearchParams(String(requestInit.body));
       expect(requestBody.get("grant_type")).toBe("refresh_token");
       expect(requestBody.get("refresh_token")).toBe("stored-refresh-token");
-      const expectedCredentials = Buffer.from("test-spotify-client-id:test-spotify-client-secret").toString("base64");
+      const expectedCredentials = Buffer.from(
+        `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`,
+      ).toString("base64");
       expect(requestInit.headers).toMatchObject({ Authorization: `Basic ${expectedCredentials}` });
 
       expect(prismaMock.spotifyAccount.update).toHaveBeenCalledWith({
@@ -283,26 +285,14 @@ describe("SpotifyService", () => {
       expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
 
-    it("branch 2: links the Spotify account to an existing user with the same email", async () => {
+    it("branch 2: refuses to link by email when a user with that email already exists", async () => {
       prismaMock.spotifyAccount.findUnique.mockResolvedValue(null);
       prismaMock.user.findUnique.mockResolvedValue(existingUser);
 
-      const result = await spotifyService.findOrCreateSpotifyAccount(spotifyProfile);
+      await expect(spotifyService.findOrCreateSpotifyAccount(spotifyProfile)).rejects.toMatchObject({ statusCode: 409 });
 
       expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { email: "listener@example.com" } });
-      expect(transactionMock.user.create).not.toHaveBeenCalled();
-      expect(transactionMock.spotifyAccount.create).toHaveBeenCalledWith({
-        data: {
-          userId: "user-1",
-          spotifyId: "spotify-user-1",
-          accessToken: "new-access-token",
-          refreshToken: "new-refresh-token",
-          expiresAt: spotifyProfile.expiresAt,
-          scope: spotifyProfile.scope,
-        },
-      });
-      expect(result.user).toBe(existingUser);
-      expect(decodeUserId(result.token)).toBe("user-1");
+      expect(prismaMock.$transaction).not.toHaveBeenCalled();
     });
 
     it("branch 3: creates a passwordless user and their Spotify account together", async () => {

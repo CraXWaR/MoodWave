@@ -3,7 +3,7 @@ import { seedMoods } from "./seed/moods.seed.js";
 
 import app from "./app";
 
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT;
 
 async function start() {
   await seedMoods(prisma);

@@ -38,7 +38,7 @@ vi.mock("../services/ai.service.js", () => ({
 // loading app pulls in every service; never create a real pg pool
 vi.mock("../db/prisma.js", () => ({ default: {} }));
 
-const FRONTEND_URL = "http://localhost:5173";
+const FRONTEND_URL = process.env.FRONTEND_URL;
 const authHeader = `Bearer ${generateAuthToken("user-1")}`;
 
 function buildSongs(count: number) {
@@ -47,27 +47,35 @@ function buildSongs(count: number) {
 
 describe("SpotifyController routes", () => {
   describe("GET /api/spotify/callback", () => {
-    it("redirects with access_denied when the user declines on Spotify", async () => {
-      const response = await request(app).get("/api/spotify/callback?error=access_denied&state=anything");
+    it.each([
+      ["connect", "/profile", () => signSpotifyState({ flow: "connect", userId: "user-1" })],
+      ["login", "/login", () => signSpotifyState({ flow: "login" })],
+      ["unreadable", "/", () => "not-a-jwt"],
+    ])("sends a declined %s flow back to %s with access_denied", async (_flow, returnPath, buildState) => {
+      const response = await request(app).get("/api/spotify/callback").query({ error: "access_denied", state: buildState() });
 
       expect(response.status).toBe(302);
-      // TODO: /settings does not exist on the client yet (open bug, see roadmap)
-      expect(response.headers.location).toBe(`${FRONTEND_URL}/settings?spotify_error=access_denied`);
+      expect(response.headers.location).toBe(`${FRONTEND_URL}${returnPath}?spotify_error=access_denied`);
     });
 
-    it.each([
-      ["code", "/api/spotify/callback?state=signed-state"],
-      ["state", "/api/spotify/callback?code=auth-code"],
-    ])("redirects with invalid_callback when %s is missing", async (_missingField, path) => {
-      const response = await request(app).get(path);
+    it("redirects with invalid_callback when the code is missing", async () => {
+      const state = signSpotifyState({ flow: "connect", userId: "user-1" });
 
-      expect(response.status).toBe(302);
-      expect(response.headers.location).toBe(`${FRONTEND_URL}/settings?spotify_error=invalid_callback`);
+      const response = await request(app).get("/api/spotify/callback").query({ state });
+
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/profile?spotify_error=invalid_callback`);
+      expect(spotifyServiceMock.handleCallback).not.toHaveBeenCalled();
+    });
+
+    it("redirects with invalid_callback when the state is missing", async () => {
+      const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code" });
+
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_error=invalid_callback`);
       expect(spotifyServiceMock.handleCallback).not.toHaveBeenCalled();
       expect(spotifyServiceMock.loginWithSpotify).not.toHaveBeenCalled();
     });
 
-    it("connect flow: links Spotify to the user in the state and redirects with spotify_connected", async () => {
+    it("connect flow: links Spotify to the user in the state and returns to the profile", async () => {
       const state = signSpotifyState({ flow: "connect", userId: "user-1" });
 
       const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state });
@@ -75,7 +83,7 @@ describe("SpotifyController routes", () => {
       expect(spotifyServiceMock.handleCallback).toHaveBeenCalledWith("user-1", "auth-code");
       expect(spotifyServiceMock.loginWithSpotify).not.toHaveBeenCalled();
       expect(response.status).toBe(302);
-      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_connected=true`);
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/profile?spotify_connected=true`);
     });
 
     it("login flow: logs in with Spotify and puts the token in the URL fragment", async () => {
@@ -95,29 +103,61 @@ describe("SpotifyController routes", () => {
 
       const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state: forgedState });
 
-      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_error=connection_failed`);
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_error=invalid_state`);
       expect(spotifyServiceMock.handleCallback).not.toHaveBeenCalled();
     });
 
     it("rejects an expired state", async () => {
+      // signed with the real test secret, so only the expiry can make it fail
       const expiredState = jwt.sign(
         { flow: "connect", userId: "user-1", exp: Math.floor(Date.now() / 1000) - 60 },
-        "test-jwt-secret",
+        process.env.JWT_SECRET!,
       );
 
       const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state: expiredState });
 
-      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_error=connection_failed`);
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_error=invalid_state`);
       expect(spotifyServiceMock.handleCallback).not.toHaveBeenCalled();
     });
 
-    it("redirects with connection_failed when the service throws", async () => {
-      spotifyServiceMock.handleCallback.mockRejectedValue(new ErrorService("Already linked", 409));
+    it("reports already_linked when the Spotify account belongs to another user", async () => {
+      spotifyServiceMock.handleCallback.mockRejectedValue(
+        new ErrorService("This Spotify account is already linked to another MoodWave account", 409),
+      );
       const state = signSpotifyState({ flow: "connect", userId: "user-1" });
 
       const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state });
 
-      expect(response.headers.location).toBe(`${FRONTEND_URL}/?spotify_error=connection_failed`);
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/profile?spotify_error=already_linked`);
+    });
+
+    it("reports connection_failed for any other connect error", async () => {
+      spotifyServiceMock.handleCallback.mockRejectedValue(new ErrorService("Failed to fetch Spotify profile", 502));
+      const state = signSpotifyState({ flow: "connect", userId: "user-1" });
+
+      const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state });
+
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/profile?spotify_error=connection_failed`);
+    });
+
+    it("sends a failed login back to the login page", async () => {
+      spotifyServiceMock.loginWithSpotify.mockRejectedValue(new Error("unique constraint failed"));
+      const state = signSpotifyState({ flow: "login" });
+
+      const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state });
+
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/login?spotify_error=connection_failed`);
+    });
+
+    it("reports email_in_use when a login hits an existing account's email", async () => {
+      spotifyServiceMock.loginWithSpotify.mockRejectedValue(
+        new ErrorService("An account with this email already exists.", 409),
+      );
+      const state = signSpotifyState({ flow: "login" });
+
+      const response = await request(app).get("/api/spotify/callback").query({ code: "auth-code", state });
+
+      expect(response.headers.location).toBe(`${FRONTEND_URL}/login?spotify_error=email_in_use`);
     });
   });
 
@@ -232,7 +272,7 @@ describe("SpotifyController routes", () => {
 
     it("fetches the access token once and returns matched tracks in suggestion order", async () => {
       const songs = buildSongs(3);
-      aiServiceMock.generateSongSuggestions.mockResolvedValue({ rejected: false, songs });
+      aiServiceMock.generateSongSuggestions.mockResolvedValue({ rejected: false, songs, avoidArtists: [] });
       spotifyServiceMock.getValidAccessToken.mockResolvedValue("access-token");
       spotifyServiceMock.searchTrack.mockImplementation(async (_accessToken: string, title: string, artist: string) => ({
         matched: false,
@@ -256,10 +296,10 @@ describe("SpotifyController routes", () => {
     });
 
     it("never runs more than 5 Spotify searches at once", async () => {
-      const songs = buildSongs(12);
+      const songs = buildSongs(10);
       let activeSearches = 0;
       let maxActiveSearches = 0;
-      aiServiceMock.generateSongSuggestions.mockResolvedValue({ rejected: false, songs });
+      aiServiceMock.generateSongSuggestions.mockResolvedValue({ rejected: false, songs, avoidArtists: [] });
       spotifyServiceMock.getValidAccessToken.mockResolvedValue("access-token");
       spotifyServiceMock.searchTrack.mockImplementation(async (_accessToken: string, title: string, artist: string) => {
         activeSearches++;
@@ -274,13 +314,131 @@ describe("SpotifyController routes", () => {
         .set("Authorization", authHeader)
         .send({ prompt: "rainy sunday" });
 
-      expect(spotifyServiceMock.searchTrack).toHaveBeenCalledTimes(12);
+      expect(spotifyServiceMock.searchTrack).toHaveBeenCalledTimes(10);
       expect(maxActiveSearches).toBe(5);
       expect(response.body.tracks.map((track: { title: string }) => track.title)).toEqual(songs.map((song) => song.title));
     });
 
+    describe("picking the playlist from the AI suggestions", () => {
+      function mockUnmatchedSearches() {
+        spotifyServiceMock.getValidAccessToken.mockResolvedValue("access-token");
+        spotifyServiceMock.searchTrack.mockImplementation(async (_accessToken: string, title: string, artist: string) => ({
+          matched: false,
+          title,
+          artist,
+        }));
+      }
+
+      function searchedTitles() {
+        return spotifyServiceMock.searchTrack.mock.calls.map((call) => call[1]);
+      }
+
+      function generate() {
+        return request(app)
+          .post("/api/spotify/playlist/generate/prompt")
+          .set("Authorization", authHeader)
+          .send({ prompt: "hard metal, STOP GIVING ME METALLICA" });
+      }
+
+      it("drops every song by an avoided artist, including collaborations, in any letter case", async () => {
+        mockUnmatchedSearches();
+        aiServiceMock.generateSongSuggestions.mockResolvedValue({
+          rejected: false,
+          songs: [
+            { title: "Master of Puppets", artist: "Metallica" },
+            { title: "No Leaf Clover", artist: "Metallica & San Francisco Symphony" },
+            { title: "Walk", artist: "Pantera" },
+            { title: "Holy Wars", artist: "Megadeth" },
+          ],
+          avoidArtists: ["metallica"],
+        });
+
+        await generate();
+
+        expect(searchedTitles()).toEqual(["Walk", "Holy Wars"]);
+      });
+
+      it("matches avoided artists as whole names, not inside other words", async () => {
+        mockUnmatchedSearches();
+        aiServiceMock.generateSongSuggestions.mockResolvedValue({
+          rejected: false,
+          songs: [
+            { title: "Detroit Rock City", artist: "Kiss" },
+            { title: "Ready for Love", artist: "Kissin' Dynamite" },
+          ],
+          avoidArtists: ["Kiss"],
+        });
+
+        await generate();
+
+        expect(searchedTitles()).toEqual(["Ready for Love"]);
+      });
+
+      it("matches avoided artist names that end in punctuation", async () => {
+        mockUnmatchedSearches();
+        aiServiceMock.generateSongSuggestions.mockResolvedValue({
+          rejected: false,
+          songs: [
+            { title: "Big Church", artist: "Sunn O)))" },
+            { title: "Raining Blood", artist: "Slayer" },
+          ],
+          avoidArtists: ["Sunn O)))"],
+        });
+
+        await generate();
+
+        expect(searchedTitles()).toEqual(["Raining Blood"]);
+      });
+
+      it("keeps at most 2 songs per artist", async () => {
+        mockUnmatchedSearches();
+        aiServiceMock.generateSongSuggestions.mockResolvedValue({
+          rejected: false,
+          songs: [
+            { title: "Walk", artist: "Pantera" },
+            { title: "Cowboys from Hell", artist: "pantera " },
+            { title: "Domination", artist: "Pantera" },
+            { title: "Raining Blood", artist: "Slayer" },
+          ],
+          avoidArtists: [],
+        });
+
+        await generate();
+
+        expect(searchedTitles()).toEqual(["Walk", "Cowboys from Hell", "Raining Blood"]);
+      });
+
+      it("trims 15 suggestions down to a 10 song playlist", async () => {
+        mockUnmatchedSearches();
+        aiServiceMock.generateSongSuggestions.mockResolvedValue({
+          rejected: false,
+          songs: buildSongs(15),
+          avoidArtists: [],
+        });
+
+        const response = await generate();
+
+        expect(spotifyServiceMock.searchTrack).toHaveBeenCalledTimes(10);
+        expect(response.body.tracks).toHaveLength(10);
+      });
+
+      it("returns 502 without touching Spotify when every suggestion is excluded", async () => {
+        aiServiceMock.generateSongSuggestions.mockResolvedValue({
+          rejected: false,
+          songs: [{ title: "Master of Puppets", artist: "Metallica" }],
+          avoidArtists: ["Metallica"],
+        });
+
+        const response = await generate();
+
+        expect(response.status).toBe(502);
+        expect(spotifyServiceMock.getValidAccessToken).not.toHaveBeenCalled();
+        expect(spotifyServiceMock.searchTrack).not.toHaveBeenCalled();
+      });
+    });
+
     it("returns the service error when Spotify is not connected", async () => {
-      aiServiceMock.generateSongSuggestions.mockResolvedValue({ rejected: false, songs: buildSongs(1) });
+      aiServiceMock.generateSongSuggestions.mockResolvedValue({ rejected: false, songs: buildSongs(1), avoidArtists: [] });
       spotifyServiceMock.getValidAccessToken.mockRejectedValue(new ErrorService("Spotify account not connected", 404));
 
       const response = await request(app)
