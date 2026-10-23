@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import styles from "./MoodWave.module.css";
 
 const MOODS = [
@@ -17,10 +19,12 @@ export default function MoodWave() {
           <span
             key={mood.key}
             className={styles.bar}
-            style={{
-              ["--mood-color" as any]: `var(--mood-${mood.key})`,
-              animationDelay: `${i * 0.18}s`,
-            }}
+            style={
+              {
+                "--mood-color": `var(--mood-${mood.key})`,
+                animationDelay: `${i * 0.18}s`,
+              } as CSSProperties
+            }
           />
         ))}
       </div>

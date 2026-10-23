@@ -14,11 +14,7 @@ export function useGetCalendar() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (calendarCache) {
-      setCalendar(calendarCache);
-      setIsLoading(false);
-      return;
-    }
+    if (calendarCache) return;
 
     entriesService
       .getCalendar()

@@ -70,7 +70,7 @@ function useLoginRedirectEffect(
         console.error("Spotify login redirect failed", err);
         setError("Couldn't complete Spotify login. Try again.");
       });
-  }, []);
+  }, [setAuthUser, setError, navigate]);
 }
 
 // Checks whether the current logged-in user has a linked Spotify account.
@@ -89,7 +89,7 @@ function useConnectionStatusEffect(
       .getStatus()
       .then((res) => setStatus(res.connected ? "connected" : "disconnected"))
       .catch(() => setStatus("disconnected"));
-  }, [user]);
+  }, [user, setStatus]);
 }
 
 export function useSpotify() {

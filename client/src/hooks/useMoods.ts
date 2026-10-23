@@ -10,37 +10,39 @@ export function invalidateMoodsCache() {
   moodsCache = null;
 }
 
+async function requestMoods(): Promise<Mood[]> {
+  if (SIMULATE_STATES.delay) await new Promise((r) => setTimeout(r, SIMULATE_STATES.delay));
+  if (SIMULATE_STATES.forceError) throw new Error("Simulated failure for testing");
+
+  const result = await moodsService.list();
+  moodsCache = result;
+  return result;
+}
+
 export function useGetMoods() {
-  const [moods, setMoods] = useState<Mood[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [moods, setMoods] = useState<Mood[]>(moodsCache ?? []);
+  const [loading, setLoading] = useState(!moodsCache);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMoods = useCallback(async () => {
-    if (moodsCache) {
-      setMoods(moodsCache);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      if (SIMULATE_STATES.delay) await new Promise((r) => setTimeout(r, SIMULATE_STATES.delay));
-      if (SIMULATE_STATES.forceError) throw new Error("Simulated failure for testing");
-
-      const result = await moodsService.list();
-      moodsCache = result;
-      setMoods(result);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load moods");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const loadMoods = useCallback(
+    () =>
+      requestMoods()
+        .then(setMoods)
+        .catch((err) => setError(err instanceof Error ? err.message : "Failed to load moods"))
+        .finally(() => setLoading(false)),
+    [],
+  );
 
   useEffect(() => {
-    fetchMoods();
-  }, [fetchMoods]);
+    if (moodsCache) return;
+    loadMoods();
+  }, [loadMoods]);
 
-  return { moods, loading, error, refetch: fetchMoods };
+  const refetch = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    return loadMoods();
+  }, [loadMoods]);
+
+  return { moods, loading, error, refetch };
 }

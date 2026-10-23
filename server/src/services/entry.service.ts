@@ -20,10 +20,6 @@ export class MoodEntryService {
   private calendarService = new CalendarService();
 
   async create(userId: string, mood: number, note?: string) {
-    if (!Number.isInteger(mood) || mood < 1 || mood > 6) {
-      throw new ErrorService("Mood must be a number between 1 and 6", 400);
-    }
-
     const entry = await prisma.moodEntry.create({
       data: { userId, mood, note: note ?? null },
     });

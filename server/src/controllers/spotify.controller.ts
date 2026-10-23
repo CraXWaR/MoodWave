@@ -1,7 +1,14 @@
 import { Request, Response } from "express";
 import { SpotifyService } from "../services/spotify.service.js";
 import { ErrorService } from "../utils/service-error.js";
-import { spotifyCallbackSchema } from "../validators/spotify.validator.js";
+import {
+  addTracksBodySchema,
+  addTracksParamsSchema,
+  createPlaylistSchema,
+  generateFromMoodSchema,
+  generateFromPromptSchema,
+  spotifyCallbackSchema,
+} from "../validators/spotify.validator.js";
 import { signSpotifyState, verifySpotifyState } from "../utils/spotify-state.js";
 import { AiService } from "../services/ai.service.js";
 import { SongSuggestion, TrackMatchResult } from "../types/spotify.interface.js";
@@ -117,14 +124,13 @@ export class SpotifyController {
   };
 
   generateFromPrompt = async (req: Request, res: Response) => {
+    const parsed = generateFromPromptSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    }
+
     try {
-      const { prompt } = req.body;
-
-      if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
-        throw new ErrorService("Prompt is required", 400);
-      }
-
-      const result = await this.handleGenerate(req.user.id, prompt);
+      const result = await this.handleGenerate(req.user.id, parsed.data.prompt);
       res.json(result);
     } catch (err) {
       if (err instanceof ErrorService) {
@@ -135,12 +141,13 @@ export class SpotifyController {
   };
 
   generateFromMood = async (req: Request, res: Response) => {
-    try {
-      const { moodValue } = req.body;
+    const parsed = generateFromMoodSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    }
 
-      if (typeof moodValue !== "number" || moodValue < 1 || moodValue > 6) {
-        throw new ErrorService("Invalid mood value", 400);
-      }
+    try {
+      const { moodValue } = parsed.data;
 
       // NOTE: moodValue is the raw averaged mood from the calendar (e.g. 4.3),
       // not one of the 6 discrete mood tokens. We pass the raw number + scale
@@ -165,16 +172,13 @@ export class SpotifyController {
   };
 
   createPlaylist = async (req: Request, res: Response) => {
+    const parsed = createPlaylistSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    }
+
     try {
-      const { uris, sourceText } = req.body;
-
-      if (!Array.isArray(uris) || uris.length === 0) {
-        throw new ErrorService("At least one track URI is required", 400);
-      }
-
-      if (!sourceText || typeof sourceText !== "string") {
-        throw new ErrorService("Source text is required", 400);
-      }
+      const { uris, sourceText } = parsed.data;
 
       const dateLabel = new Date().toLocaleDateString("en-US", {
         month: "short",
@@ -210,18 +214,16 @@ export class SpotifyController {
   };
 
   addTracksToPlaylist = async (req: Request<{ playlistId: string }>, res: Response) => {
+    const parsedParams = addTracksParamsSchema.safeParse(req.params);
+    const parsedBody = addTracksBodySchema.safeParse(req.body);
+    if (!parsedParams.success || !parsedBody.success) {
+      const firstIssue = parsedParams.error?.issues[0] ?? parsedBody.error?.issues[0];
+      return res.status(400).json({ error: firstIssue?.message ?? "Invalid input" });
+    }
+
     try {
-      const { playlistId } = req.params;
-      const { uris } = req.body;
-
-      // the id ends up in a Spotify URL path, so only allow Spotify's base62 ids
-      if (!/^[A-Za-z0-9]+$/.test(playlistId)) {
-        throw new ErrorService("Invalid playlist id", 400);
-      }
-
-      if (!Array.isArray(uris) || uris.length === 0) {
-        throw new ErrorService("At least one track URI is required", 400);
-      }
+      const { playlistId } = parsedParams.data;
+      const { uris } = parsedBody.data;
 
       const accessToken = await this.spotifyService.getValidAccessToken(req.user.id);
       await this.addTracksWithRetry(accessToken, playlistId, uris);
